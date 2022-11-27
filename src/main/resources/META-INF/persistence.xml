@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
+             version="2.2">
+  <persistence-unit name="default">
+      <class>live.cnpm_web.entity.transaction.BaseTransaction</class>
+      <class>live.cnpm_web.entity.transaction.Transfer</class>
+      <class>live.cnpm_web.entity.transaction.TimeDeposit</class>
+      <class>live.cnpm_web.entity.transaction.loan.Loan</class>
+      <class>live.cnpm_web.entity.transaction.loan.LoanRequest</class>
+      <class>live.cnpm_web.entity.verification.Verification</class>
+      <class>live.cnpm_web.entity.verification.VerificationCode</class>
+      <class>live.cnpm_web.entity.account.Activity</class>
+      <class>live.cnpm_web.entity.account.TransactionAccount</class>
+      <class>live.cnpm_web.entity.account.account.BaseAccount</class>
+      <class>live.cnpm_web.entity.account.account.Customer</class>
+      <class>live.cnpm_web.entity.account.account.Employee</class>
+      <class>live.cnpm_web.entity.account.account.Manager</class>
+      <class>live.cnpm_web.entity.message.Message</class>
+      <class>live.cnpm_web.entity.message.MessageDetail</class>
+
+      <properties>
+      <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+      <property name="hibernate.show_sql" value="true"/>
+      
+      <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://lin-11920-3301-pgsql-primary.servers.linodedb.net:5432/postgres"/>
+      <property name="javax.persistence.jdbc.user" value="linpostgres"/>
+      <property name="javax.persistence.jdbc.password" value="UeNU!1S2D20oIIVr"/>
+    </properties>
+  </persistence-unit>
+</persistence>

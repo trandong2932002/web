@@ -16,7 +16,7 @@
       </ul>
       <div class="d-md-flex justify-content-md-end flex-grow-1">
         <div class="d-md-inline d-none dropdown-center">
-          <div class="codicon codicon-account fs-2 d-none d-md-block" data-bs-toggle="dropdown"></div>
+          <div class="codicon codicon-customer fs-2 d-none d-md-block" data-bs-toggle="dropdown"></div>
           <ul class="dropdown-menu dropdown-menu-end">
             <li><a href="/change-information" class="dropdown-item">Thông tin cá nhân</a></li>
             <li><a href="/change-password" class="dropdown-item">Đổi mật khẩu</a></li>
