@@ -6,7 +6,7 @@
     <persistence-unit name="default">
         <class>live.cnpm_web.entity.transaction.BaseTransaction</class>
         <class>live.cnpm_web.entity.transaction.Transfer</class>
-        <class>live.cnpm_web.entity.transaction.TimeDeposit</class>
+        <class>live.cnpm_web.entity.transaction.Savings</class>
         <class>live.cnpm_web.entity.transaction.loan.Loan</class>
         <class>live.cnpm_web.entity.transaction.loan.LoanRequest</class>
         <class>live.cnpm_web.entity.verification.Verification</class>

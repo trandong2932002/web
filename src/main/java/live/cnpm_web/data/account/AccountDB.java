@@ -3,6 +3,7 @@ package live.cnpm_web.data.account;
 import live.cnpm_web.data.BaseDB;
 import live.cnpm_web.entity.account.TransactionAccount;
 import live.cnpm_web.entity.account.account.Customer;
+import live.cnpm_web.entity.account.account.Employee;
 import live.cnpm_web.util.DBUtil;
 
 import javax.persistence.EntityManager;
@@ -43,5 +44,14 @@ public class AccountDB extends BaseDB {
 
     public static TransactionAccount selectByAccountNumber(String accountNumber) {
         return selectByParameter("accountNumber", accountNumber, TransactionAccount.class);
+    }
+
+    // Employee
+    public static Customer selectBySSN(String ssn) {
+        return selectByParameter("ssn", ssn, Customer.class);
+    }
+
+    public static boolean authenticateEmployee(String phoneNumber, String password) {
+        return authenticate(phoneNumber, password, Employee.class) == null;
     }
 }

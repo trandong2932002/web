@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -23,6 +25,53 @@
 
     <div class="container-fluid">
       <div class="row flex-nowrap overflow-auto">
+
+        <div>
+          <c:choose>
+            <c:when test="${empty savingsList}"><p>Bạn không có khoản gửi tiết kiệm nào</p></c:when>
+            <c:otherwise>
+              <c:forEach items="${savingsList}" var="savings">
+                <div class="col-xxl-2 col-lg-3 col-md-4 col-sm-6">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">${savings.name}</h5>
+                      <p class="card-text d-flex justify-content-between">
+                        <span>Ngày mở sổ:</span>
+                        <span>${savings.createdDate}</span>
+                      </p>
+                      <p class="card-text d-flex justify-content-between">
+                        <span>Ngày đáo hạn:</span>
+                        <span>${savings.maturityDate}/span>
+                      </p>
+                      <p class="card-text d-flex justify-content-between">
+                        <span>Kỳ hạn:</span>
+                        <span>1 tháng</span>
+                      </p>
+                      <p class="card-text d-flex justify-content-between">
+                        <span>Lãi suất:</span>
+                        <span>4% năm</span>
+                      </p>
+                      <a href="/savings?action=information&id=1" class="btn btn-outline-primary d-flex justify-content-center">Thông
+                        tin chi tiết</a>
+                    </div>
+
+                    <div class="card-footer">
+                      <small class="d-flex justify-content-between">
+                        <span>Trạng thái:</span>
+                        <span id="savings-state">Đang chờ</span>
+                      </small>
+                      <small class="d-flex justify-content-between">
+                        <span>Số ngày còn lại:</span>
+                        <span>100</span>
+                      </small>
+                    </div>
+                  </div>
+                </div>
+
+              </c:forEach>
+            </c:otherwise>
+          </c:choose>
+        </div>
 
         <div class="col-xxl-2 col-lg-3 col-md-4 col-sm-6">
           <div class="card">

@@ -4,10 +4,11 @@ import live.cnpm_web.data.account.AccountDB;
 import live.cnpm_web.data.transaction.TransactionDB;
 import live.cnpm_web.entity.account.TransactionAccount;
 import live.cnpm_web.entity.transaction.Transfer;
+import live.cnpm_web.servlet.Savings;
 
 import java.time.LocalDateTime;
 
-public class TransferUtil {
+public class TransactionUtil {
     public static void transfer(Transfer transfer) {
         transfer.setCreatedTime(LocalDateTime.now());
         TransactionDB.insert(transfer);
@@ -28,5 +29,9 @@ public class TransferUtil {
 
         AccountDB.update(src);
         AccountDB.update(dest);
+    }
+
+    public static void savings(Savings savings) {
+
     }
 }

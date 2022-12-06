@@ -1,12 +1,13 @@
 package live.cnpm_web.entity.transaction;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "TimeDeposit")
-public class TimeDeposit extends BaseTransaction {
+@Table(name = "Savings")
+public class Savings extends BaseTransaction {
+
+//    public enum TermInterest
 
     @Column(name = "created_date", columnDefinition = "DATE")
     private LocalDateTime createdDate;
@@ -17,6 +18,9 @@ public class TimeDeposit extends BaseTransaction {
     @Column(name = "end_time", columnDefinition = "TIMESTAMP")
     private LocalDateTime endTime;
 
+    @Column(name = "term")
+    private Integer term;
+
     @Column(name = "interest", precision = 4, scale = 0)
     private Double interest;
 
@@ -26,7 +30,15 @@ public class TimeDeposit extends BaseTransaction {
     @Column(name = "rolled_over")
     private Boolean rolledOver;
 
-    public TimeDeposit() {
+    public Savings() {
+    }
+
+    public Integer getTerm() {
+        return term;
+    }
+
+    public void setTerm(Integer term) {
+        this.term = term;
     }
 
     public LocalDateTime getCreatedDate() {

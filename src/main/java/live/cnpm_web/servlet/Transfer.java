@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Enumeration;
 
 @WebServlet(name = "Transfer", value = "/transfer")
 public class Transfer extends HttpServlet {
@@ -78,7 +77,7 @@ public class Transfer extends HttpServlet {
 
                 if (verify) {
                     // make transfer here
-                    TransferUtil.transfer(transfer);
+                    TransactionUtil.transfer(transfer);
 
                     message = "Thành công";
 

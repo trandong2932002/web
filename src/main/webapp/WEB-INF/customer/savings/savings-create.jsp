@@ -1,3 +1,7 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -8,6 +12,7 @@
   <%@include file="/WEB-INF/dependencies/style.jsp" %>
 
   <script src="${pageContext.request.contextPath}/assets/scripts/another/customer/savings/savings-create.js" defer></script>
+  <script src="${pageContext.request.contextPath}/assets/scripts/another/otp-input-savings.js" defer></script>
 
 </head>
 <body class="bg-light">
@@ -22,7 +27,10 @@
         <span class="h3">Tạo khoản gửi tiết kiệm</span>
       </div>
 
-      <form action="" method="post" onsubmit="return validate()">
+      <form action="" id="main-form" method="post">
+<%--        onsubmit="return validate()" conflict with xhr--%>
+
+        <input type="hidden" id="action" name="action" value="create">
 
         <div class="mb-2">
           <label for="savings-name" class="form-label">Tên sổ tiết kiệm</label>
@@ -38,8 +46,8 @@
 
             <div class="col-sm-6">
               <label for="available-amount" class="form-label">Số dư khả dụng</label>
-              <input type="text" name="available-amount" id="available-amount"" class=" form-control text-success"
-              disabled value="123456789">
+              <input type="text" name="available-amount" id="available-amount" class=" form-control text-success"
+              disabled value="<fmt:formatNumber value="${src.balance}" maxFractionDigits="0"/>">
             </div>
           </div>
         </div>
@@ -73,8 +81,8 @@
         </div>
 
         <div class="mb-2">
-          <label for="renew" class="form-label">Tự động tái tục</label>
-          <select name="renew" id="renew" class="form-select">
+          <label for="rolled-over" class="form-label">Tự động tái tục</label>
+          <select name="rolled-over" id="rolled-over" class="form-select">
             <option value="1" selected>Không</option>
             <option value="2">Tái tục gốc</option>
             <option value="3">Tái tục gốc và lãi</option>
@@ -82,14 +90,18 @@
         </div>
 
         <div class="d-flex justify-content-sm-end justify-content-center mt-3">
-          <input type="hidden" name="action" value="">
-          <button class="btn btn-primary me-2" formaction="/savings">Hủy</button>
-          <button class="btn btn-primary" formaction="/savings">Tạo</button>
+          <a class="btn btn-secondary me-2" href="/savings">Hủy</a>
+          <button class="btn btn-primary" id="create-otp" formaction="/savings">Tạo</button>
         </div>
       </form>
 
     </div>
   </div>
+</section>
+
+<%--modal--%>
+<section>
+  <%@include file="/WEB-INF/dependencies/otp-input.jsp" %>
 </section>
 
 </body>
