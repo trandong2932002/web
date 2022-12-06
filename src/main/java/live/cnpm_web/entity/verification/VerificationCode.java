@@ -2,7 +2,10 @@ package live.cnpm_web.entity.verification;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.Random;
 
 @Entity
 @Table(name = "VerificationCode")
@@ -44,10 +47,21 @@ public class VerificationCode {
     }
 
     public VerificationCode() {
+        createdTime = LocalDateTime.now();
+        // expired after 60s
+        expiredTime = createdTime.plus(60, ChronoUnit.SECONDS);
+        code = "";
+        for (int x : new Random().ints(0, 9).distinct().limit(6).toArray()) {
+            code += x;
+        }
     }
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public LocalDateTime getCreatedTime() {

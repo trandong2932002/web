@@ -1,7 +1,9 @@
 package live.cnpm_web.data.account;
 
 import live.cnpm_web.data.BaseDB;
-import live.cnpm_web.data.DBUtil;
+import live.cnpm_web.entity.account.TransactionAccount;
+import live.cnpm_web.entity.account.account.Customer;
+import live.cnpm_web.util.DBUtil;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -9,37 +11,37 @@ import javax.persistence.TypedQuery;
 
 public class AccountDB extends BaseDB {
 
-    public static <T> boolean authenticate(String phoneNumber, String password, Class<T> klass) {
+    public static <T> T authenticate(String phoneNumber, String password, Class<T> klass) {
         EntityManager em = DBUtil.getEMFactory().createEntityManager();
         String qString = "SELECT u FROM " + klass.getSimpleName() + " u"
-                + " WHERE u.phone_number = :phone_number"
+                + " WHERE u.phoneNumber = :phoneNumber"
                 + " AND u.password = :password";
         TypedQuery<T> q = em.createQuery(qString, klass);
-        q.setParameter("phone_number", phoneNumber);
+        q.setParameter("phoneNumber", phoneNumber);
         q.setParameter("password", password);
         try {
             T account = q.getSingleResult();
-            return true;
+            return account;
         } catch (NoResultException e) {
-            return false;
+            return null;
         } finally {
             em.close();
         }
     }
 
     public static <T> boolean checkPhoneNumberExist(String phoneNumber, Class<T> klass) {
-        if (selecctByParameter("phone_number", phoneNumber, klass) != null) {
-            return true;
-        } else {
-            return false;
-        }
+        return selectByParameter("phoneNumber", phoneNumber, klass) != null;
     }
 
     public static <T> boolean checkEmailExist(String email, Class<T> klass) {
-        if (selecctByParameter("email", email, klass) != null) {
-            return true;
-        } else {
-            return false;
-        }
+        return selectByParameter("email", email, klass) != null;
+    }
+
+    public static boolean checkTransactionAccountNumberExist(String accountNumber) {
+        return selectByParameter("accountNumber", accountNumber, TransactionAccount.class) != null;
+    }
+
+    public static TransactionAccount selectByAccountNumber(String accountNumber) {
+        return selectByParameter("accountNumber", accountNumber, TransactionAccount.class);
     }
 }

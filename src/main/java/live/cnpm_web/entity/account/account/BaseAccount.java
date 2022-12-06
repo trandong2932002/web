@@ -8,8 +8,8 @@ import java.util.regex.Pattern;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class BaseAccount implements Serializable {
     @Id
-    @SequenceGenerator(name = "default_gen", sequenceName = "account_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "default_gen")
+    @SequenceGenerator(name = "account_id_seq", sequenceName = "account_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_id_seq")
     @Column(name = "id")
     private Long id;
 
@@ -18,6 +18,9 @@ public abstract class BaseAccount implements Serializable {
 
     @Column(name = "lastname")
     private String lastname;
+
+    @Column(name = "ssn", unique = true)
+    private String ssn;
 
     @Column(name = "phone_number", unique = true)
     private String phoneNumber;
@@ -37,6 +40,14 @@ public abstract class BaseAccount implements Serializable {
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.password = password;
+    }
+
+    public String getSsn() {
+        return ssn;
+    }
+
+    public void setSsn(String ssn) {
+        this.ssn = ssn;
     }
 
     public Long getId() {

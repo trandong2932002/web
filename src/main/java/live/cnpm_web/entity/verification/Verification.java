@@ -1,20 +1,15 @@
 package live.cnpm_web.entity.verification;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "Verification")
 public class Verification implements Serializable {
-
-    public enum VerificationStatus {
-        SUCCESS, FAILURE
-    }
 
     @Id
     @SequenceGenerator(name = "verification_id_seq", sequenceName = "verification_id_seq", allocationSize = 1)
@@ -28,9 +23,8 @@ public class Verification implements Serializable {
     @Column(name = "expired_time", columnDefinition = "TIMESTAMP")
     private LocalDateTime expiredTime;
 
-    @Enumerated(EnumType.ORDINAL)
     @Column(name = "status")
-    private VerificationStatus status;
+    private boolean status;
 
     @OneToMany(mappedBy = "verification", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VerificationCode> verificationCodeList = new ArrayList<>();
@@ -41,6 +35,14 @@ public class Verification implements Serializable {
     }
 
     public Verification() {
+        createdTime = LocalDateTime.now();
+        // expired after 5 minutes
+        expiredTime = createdTime.plus(5, ChronoUnit.MINUTES);
+        // create the first verification code
+        VerificationCode verificationCode = new VerificationCode();
+        addVerificationCode(verificationCode);
+
+        status = false;
     }
 
     public Long getId() {
@@ -63,11 +65,16 @@ public class Verification implements Serializable {
         this.expiredTime = expiredTime;
     }
 
-    public VerificationStatus getStatus() {
+    public boolean getStatus() {
         return status;
     }
 
-    public void setStatus(VerificationStatus status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
+
+    public List<VerificationCode> getVerificationCodeList() {
+        return verificationCodeList;
+    }
+
 }

@@ -16,8 +16,8 @@ public abstract class BaseTransaction implements Serializable {
     }
 
     @Id
-    @SequenceGenerator(name = "default_gen", sequenceName = "transaction_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "default_gen")
+    @SequenceGenerator(name = "transaction_id_seq", sequenceName = "transaction_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_id_seq")
     @Column(name = "id")
     private Long id;
 
@@ -39,8 +39,12 @@ public abstract class BaseTransaction implements Serializable {
     private Verification verification;
 
     @ManyToOne
-    @JoinColumn(name = "transaction_account_id")
-    private TransactionAccount transactionAccount;
+    @JoinColumn(name = "transaction_account_source_id")
+    private TransactionAccount transactionAccountSource;
+
+    @ManyToOne
+    @JoinColumn(name = "transaction_account_destination_id")
+    private TransactionAccount transactionAccountDestination;
 
     public BaseTransaction() {
     }
@@ -89,11 +93,19 @@ public abstract class BaseTransaction implements Serializable {
         this.verification = verification;
     }
 
-    public TransactionAccount getTransactionAccount() {
-        return transactionAccount;
+    public TransactionAccount getTransactionAccountSource() {
+        return transactionAccountSource;
     }
 
-    public void setTransactionAccount(TransactionAccount transactionAccount) {
-        this.transactionAccount = transactionAccount;
+    public void setTransactionAccountSource(TransactionAccount transactionAccount) {
+        this.transactionAccountSource = transactionAccount;
+    }
+
+    public TransactionAccount getTransactionAccountDestination() {
+        return transactionAccountDestination;
+    }
+
+    public void setTransactionAccountDestination(TransactionAccount transactionAccountDestination) {
+        this.transactionAccountDestination = transactionAccountDestination;
     }
 }

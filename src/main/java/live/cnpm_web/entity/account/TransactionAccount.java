@@ -4,6 +4,7 @@ import live.cnpm_web.entity.account.account.Customer;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Random;
 
 @Entity
 @Table(name = "TransactionAccount")
@@ -31,6 +32,9 @@ public class TransactionAccount implements Serializable {
     // method that transaction account load transaction is in transactiondb
 
     public TransactionAccount() {
+        Random rand = new Random(System.currentTimeMillis());
+        accountNumber = String.valueOf(rand.nextInt(9999999) + 10000000);
+        balance = 0D;
     }
 
     public Long getId() {

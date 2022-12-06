@@ -1,11 +1,12 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <title>Document</title>
+  <title>Trang Chủ</title>
 
   <%@include file="/WEB-INF/dependencies/meta.html" %>
   <%@include file="/WEB-INF/dependencies/script.jsp" %>
   <%@include file="/WEB-INF/dependencies/style.jsp" %>
+<%--  <script src="${pageContext.request.contextPath}/assets/scripts/another/otp-input.js" defer></script>--%>
 
 </head>
 <body class="bg-light">
@@ -61,6 +62,6 @@
       </button>
     </div>
   </section>
-  
+
 </body>
 </html>

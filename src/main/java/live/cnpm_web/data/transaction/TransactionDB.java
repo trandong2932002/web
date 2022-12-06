@@ -1,7 +1,7 @@
 package live.cnpm_web.data.transaction;
 
 import live.cnpm_web.data.BaseDB;
-import live.cnpm_web.data.DBUtil;
+import live.cnpm_web.util.DBUtil;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;

@@ -6,6 +6,7 @@ import live.cnpm_web.entity.verification.Verification;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Entity
 @Table(name = "Activity")
@@ -15,6 +16,9 @@ public class Activity implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "activity_seq")
     @Column(name = "id")
     private Long id;
+
+    @Column(name = "session_id")
+    private String sessionId;
 
     @Column(name = "created_time", columnDefinition = "TIMESTAMP")
     private LocalDateTime createdTime;
@@ -32,6 +36,16 @@ public class Activity implements Serializable {
     @OneToOne
     @JoinColumn(name = "verification_id", unique = true)
     private Verification verification;
+
+    public Activity(BaseAccount account, Verification verification, String sessionId) {
+        createdTime = LocalDateTime.now();
+        // session expired after 15 minutes
+        expiredTime = createdTime.plus(100, ChronoUnit.MINUTES);
+
+        this.account = account;
+        this.verification = verification;
+        this.sessionId = sessionId;
+    }
 
     public Activity() {
     }
@@ -78,5 +92,13 @@ public class Activity implements Serializable {
 
     public void setVerification(Verification verification) {
         this.verification = verification;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 }

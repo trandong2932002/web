@@ -1,5 +1,7 @@
 package live.cnpm_web.data;
 
+import live.cnpm_web.util.DBUtil;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
@@ -8,7 +10,7 @@ import java.util.List;
 
 public abstract class BaseDB {
 
-    protected static <T, V> T selecctByParameter(String parameterName, V parameterValue, Class<T> klass) {
+    protected static <T, V> T selectByParameter(String parameterName, V parameterValue, Class<T> klass) {
         EntityManager em = DBUtil.getEMFactory().createEntityManager();
         String qString = "SELECT u FROM " + klass.getSimpleName() + " u"
                 + " WHERE u." + parameterName + " = :" + parameterName;

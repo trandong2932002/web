@@ -1,4 +1,4 @@
-package live.cnpm_web.data;
+package live.cnpm_web.util;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
