@@ -11,7 +11,8 @@
   <%@include file="/WEB-INF/dependencies/script.jsp" %>
   <%@include file="/WEB-INF/dependencies/style.jsp" %>
 
-  <script src="${pageContext.request.contextPath}/assets/scripts/another/customer/savings/savings-create.js" defer></script>
+  <script src="${pageContext.request.contextPath}/assets/scripts/another/customer/savings/savings-create.js"
+          defer></script>
   <script src="${pageContext.request.contextPath}/assets/scripts/another/otp-input-savings.js" defer></script>
 
 </head>
@@ -19,7 +20,7 @@
 
 <%@include file="../dependencies/nav.jsp" %>
 
-<section id="create-savings" class="bg-light">
+<section id="savings-create" class="bg-light">
   <div class="vh-100 d-sm-flex justify-content-sm-center align-items-sm-center">
     <div class="m-sm-5 p-5 shadow">
 
@@ -27,8 +28,12 @@
         <span class="h3">Tạo khoản gửi tiết kiệm</span>
       </div>
 
+
+      <div id="create-message">
+      </div>
+
       <form action="" id="main-form" method="post">
-<%--        onsubmit="return validate()" conflict with xhr--%>
+        <%--        onsubmit="return validate()" conflict with xhr--%>
 
         <input type="hidden" id="action" name="action" value="create">
 
@@ -47,7 +52,7 @@
             <div class="col-sm-6">
               <label for="available-amount" class="form-label">Số dư khả dụng</label>
               <input type="text" name="available-amount" id="available-amount" class=" form-control text-success"
-              disabled value="<fmt:formatNumber value="${src.balance}" maxFractionDigits="0"/>">
+                     disabled value="<fmt:formatNumber value="${src.balance}" maxFractionDigits="0"/>">
             </div>
           </div>
         </div>
@@ -83,15 +88,17 @@
         <div class="mb-2">
           <label for="rolled-over" class="form-label">Tự động tái tục</label>
           <select name="rolled-over" id="rolled-over" class="form-select">
-            <option value="1" selected>Không</option>
-            <option value="2">Tái tục gốc</option>
-            <option value="3">Tái tục gốc và lãi</option>
+            <option value="0" selected>Không</option>
+            <option value="1">Tái tục gốc</option>
+            <option value="2">Tái tục gốc và lãi</option>
           </select>
         </div>
 
         <div class="d-flex justify-content-sm-end justify-content-center mt-3">
           <a class="btn btn-secondary me-2" href="/savings">Hủy</a>
-          <button class="btn btn-primary" id="create-otp" formaction="/savings">Tạo</button>
+          <button type="button" class="btn btn-primary" id="create-savings">Tạo</button>
+          <button type="button" style="display: none" id="create-modal" data-bs-toggle="modal"
+                  data-bs-target="#otp-static"/>
         </div>
       </form>
 

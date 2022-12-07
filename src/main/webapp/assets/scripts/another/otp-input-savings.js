@@ -25,11 +25,10 @@ for (let i = 0; i < inputs.length; i++) {
 
 
 // button
-document.getElementById("create-otp").addEventListener("click", otp_timer)
-document.getElementById("create-otp").addEventListener("click", create_verification_code)
 document.getElementById("create-new-otp").addEventListener("click", otp_timer)
 document.getElementById("create-new-otp").addEventListener("click", create_verification_code)
-
+document.getElementById("create-savings").addEventListener("click", create_savings)
+document.getElementById("create-savings").addEventListener("click", otp_timer)
 document.getElementById("verify-otp").addEventListener("click", check_verification_code)
 
 let pathname = window.location.pathname;
@@ -81,10 +80,49 @@ function create_verification_code() {
         console.log("XHR error")
     }
 
-    document.getElementById("action").value = "create_verification_code"
-    let formData = document.getElementById("main-form")
+    let json = JSON.stringify({
+        action: "create_verification_code",
+    });
 
-    let json = JSON.stringify(Object.fromEntries(formData));
+    xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8")
+    xhr.send(json)
+}
+
+function create_savings() {
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", pathname)
+    xhr.responseType = "json"
+
+    xhr.onload = function (e) {
+        let x = xhr.response
+        if (x.status) {
+            document.getElementById("create-modal").click()
+            document.getElementById("create-message").classList.add("d-none")
+        } else {
+            let parent = document.getElementById("create-message");
+            parent.classList.remove("d-none")
+
+            while (parent.firstChild) {
+                parent.removeChild(parent.firstChild)
+            }
+
+            let newChild = document.createElement("div")
+            newChild.classList.add(x.status ? "alert-success" : "alert-danger")
+            newChild.classList.add("alert")
+            newChild.innerText = x.message
+
+            parent.appendChild(newChild)
+
+        }
+    }
+
+    xhr.onerror = function () {
+        console.log("XHR error")
+    }
+
+    document.getElementById("action").value = "create_savings"
+    let formData = new FormData(document.getElementById("main-form"))
+    let json = JSON.stringify(Object.fromEntries(formData.entries()));
 
     xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8")
     xhr.send(json)
@@ -98,7 +136,7 @@ function check_verification_code() {
     xhr.onload = function (e) {
         let x = xhr.response
         if (x != null) {
-            let messaage = x.message
+            let message = x.message
 
             let parent = document.getElementById("message")
             while (parent.firstChild) {
@@ -108,7 +146,7 @@ function check_verification_code() {
             let newChild = document.createElement("div")
             newChild.classList.add(x.status ? "alert-success" : "alert-danger")
             newChild.classList.add("alert")
-            newChild.innerText = messaage
+            newChild.innerText = message
 
             parent.appendChild(newChild)
         }

@@ -15,7 +15,7 @@ public class Customer extends BaseAccount {
     @Column(name = "dob", columnDefinition = "DATE")
     private LocalDate dob;
 
-    @OneToOne(mappedBy = "customer", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = false)
+    @OneToOne(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = false)
     private TransactionAccount transactionAccount;
 
     public String getAddress() {

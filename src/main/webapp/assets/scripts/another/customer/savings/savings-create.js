@@ -34,6 +34,7 @@ const interest_rates = {
     "36 tháng": "7%"
 }
 const d = new Date()
+d.setDate(d.getDate() + 1)
 
 term.addEventListener("change", function (e) {
     let values_interest_rates = Object.values(interest_rates)
@@ -82,17 +83,17 @@ function format_date(date) {
     return year + '-' + month + '-' + day
 }
 
-function validate() {
-    let errors = []
-    let i_amount = parseInt(amount.value)
-    let i_available_amount = parseInt(available_amount.value)
-    if (i_amount > i_available_amount) {
-        errors.push("Số tiền trong tài khoản không đủ")
-    }
-    if (errors.length) {
-        alert(errors.join('\n'))
-        console.log('asd')
-        return false
-    }
-    return true
-}
+// function validate() {
+//     let errors = []
+//     let i_amount = parseInt(amount.value)
+//     let i_available_amount = parseInt(available_amount.value)
+//     if (i_amount > i_available_amount) {
+//         errors.push("Số tiền trong tài khoản không đủ")
+//     }
+//     if (errors.length) {
+//         alert(errors.join('\n'))
+//         console.log('asd')
+//         return false
+//     }
+//     return true
+// }

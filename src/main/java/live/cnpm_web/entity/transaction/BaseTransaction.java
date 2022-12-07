@@ -11,10 +11,6 @@ import java.time.LocalDateTime;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class BaseTransaction implements Serializable {
 
-    public enum TransactionStatus {
-        SUCCESS, FAILURE
-    }
-
     @Id
     @SequenceGenerator(name = "transaction_id_seq", sequenceName = "transaction_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_id_seq")
@@ -24,9 +20,6 @@ public abstract class BaseTransaction implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @Enumerated(EnumType.ORDINAL)
-    @Column(name = "status")
-    private TransactionStatus status;
 
     @Column(name = "amount", precision = 20, scale = 0)
     private Double amount;
@@ -59,14 +52,6 @@ public abstract class BaseTransaction implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public TransactionStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(TransactionStatus status) {
-        this.status = status;
     }
 
     public Double getAmount() {
