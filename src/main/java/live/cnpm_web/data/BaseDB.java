@@ -83,7 +83,7 @@ public abstract class BaseDB {
         EntityTransaction transaction = em.getTransaction();
         try {
             transaction.begin();
-            em.remove(entity);
+            em.remove(em.merge(entity));
             transaction.commit();
         } catch (Exception ex) {
             transaction.rollback();

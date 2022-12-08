@@ -54,4 +54,8 @@ public class AccountDB extends BaseDB {
     public static boolean authenticateEmployee(String phoneNumber, String password) {
         return authenticate(phoneNumber, password, Employee.class) == null;
     }
+
+    public static Customer selectByPhoneNumber(String phoneNumber) {
+        return selectByParameter("phoneNumber", phoneNumber, Customer.class);
+    }
 }

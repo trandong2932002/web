@@ -1,17 +1,17 @@
 <nav class="navbar navbar-expand-md sticky-top shadow bg-light">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">[LOGO]</a>
+<%--    <a class="navbar-brand" href="#">[LOGO]</a>--%>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item"><a href="/" class="nav-link">Trang chủ</a></li>
-        <li class="nav-item"><a href="#" class="nav-link">CSKH</a></li>
+<%--        <li class="nav-item"><a href="#" class="nav-link">CSKH</a></li>--%>
         <li class="nav-item"><a href="/transfer" class="nav-link">Chuyển khoản</a></li>
-        <li class="nav-item"><a href="/payment" class="nav-link">Thanh toán hoá đơn</a></li>
+<%--        <li class="nav-item"><a href="/payment" class="nav-link">Thanh toán hoá đơn</a></li>--%>
         <li class="nav-item"><a href="/savings" class="nav-link">Gửi tiết kiệm</a></li>
-        <li class="nav-item"><a href="/loan" class="nav-link">Tạo khoản vay</a></li>
+<%--        <li class="nav-item"><a href="/loan" class="nav-link">Tạo khoản vay</a></li>--%>
         <li class="nav-item"><a href="/transaction-history" class="nav-link">Lịch sử</a></li>
       </ul>
       <div class="d-md-flex justify-content-md-end flex-grow-1">

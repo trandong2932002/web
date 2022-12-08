@@ -1,6 +1,7 @@
 package live.cnpm_web.data.account;
 
 import live.cnpm_web.data.BaseDB;
+import live.cnpm_web.entity.verification.Verification;
 import live.cnpm_web.util.DBUtil;
 import live.cnpm_web.entity.account.Activity;
 
@@ -23,6 +24,21 @@ public class ActivityDB extends BaseDB {
                 "where u.sessionId = :sessionId";
         TypedQuery<Activity> q = em.createQuery(qString, Activity.class);
         q.setParameter("sessionId", sessionId);
+        try {
+            return q.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        } finally {
+            em.close();
+        }
+    }
+
+    public static Activity selectByVerification(Verification verification) {
+        EntityManager em = DBUtil.getEMFactory().createEntityManager();
+        String qString = "select u from Activity  u " +
+                "where u.verification = :verification";
+        TypedQuery<Activity> q = em.createQuery(qString, Activity.class);
+        q.setParameter("verification", verification);
         try {
             return q.getSingleResult();
         } catch (NoResultException e) {

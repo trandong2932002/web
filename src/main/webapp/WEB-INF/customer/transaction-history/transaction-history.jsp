@@ -1,3 +1,6 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -27,51 +30,33 @@
       </tr>
       </thead>
       <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <td>Chuyển khoản</td>
-        <td>1-1-2000</td>
-        <td>123789</td>
-        <td>890543</td>
-        <td>100000000</td>
-        <td>Mua hàng</td>
-      </tr>
-      <tr>
-        <th scope="row">2</th>
-        <td>Chuyển khoản</td>
-        <td>1-1-2000</td>
-        <td>123789</td>
-        <td>890543</td>
-        <td>100000000</td>
-        <td>Thanh toán hoá đơn</td>
-      </tr>
-      <tr>
-        <th scope="row">3</th>
-        <td>Chuyển khoản</td>
-        <td>1-1-2000</td>
-        <td>123789</td>
-        <td>890543</td>
-        <td>100000000</td>
-        <td>Thanh toán hoá đơn</td>
-      </tr>
-      <tr>
-        <th scope="row">4</th>
-        <td>Gửi tiết kiệm</td>
-        <td>1-1-2000</td>
-        <td>123789</td>
-        <td>890543</td>
-        <td>100000000</td>
-        <td>Khoản tiết kiệm ABC</td>
-      </tr>
-      <tr>
-        <th scope="row">5</th>
-        <td>Trả nợ vay</td>
-        <td>1-1-2000</td>
-        <td>123789</td>
-        <td>890543</td>
-        <td>100000000</td>
-        <td>Khoản vay OKM</td>
-      </tr>
+
+      <c:choose>
+        <c:when test="${empty transactionList}">
+          <div class="container-fluid">
+            <div class="row flex-nowrap overflow-auto">
+              <p>Bạn không có giao dịch nào</p>
+            </div>
+          </div>
+        </c:when>
+
+        <c:otherwise>
+          <c:forEach items="${transactionList}" var="transaction" varStatus="loop">
+            <tr>
+              <th scope="row">${loop.index}</th>
+              <td></td>
+              <td>
+                <fmt:parseDate value="${transaction.createdTime}" pattern="y-M-dd'T'H:m" var="parseCreatedTime"></fmt:parseDate>
+                <fmt:formatDate value="${parseCreatedTime}" pattern="yyyy/MM/dd" />
+              </td>
+              <td>${transaction.transactionAccountSource.accountNumber}</td>
+              <td>${transaction.transactionAccountDestination.accountNumber}</td>
+              <td>${transaction.amount}</td>
+              <td>${transaction.name}</td>
+            </tr>
+          </c:forEach>
+        </c:otherwise>
+      </c:choose>
       </tbody>
     </table>
   </div>

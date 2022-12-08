@@ -8,6 +8,7 @@ import live.cnpm_web.entity.account.Activity;
 import live.cnpm_web.entity.account.TransactionAccount;
 import live.cnpm_web.entity.account.account.Customer;
 import live.cnpm_web.entity.verification.Verification;
+import live.cnpm_web.entity.verification.VerificationCode;
 import live.cnpm_web.util.*;
 
 import javax.servlet.*;
@@ -81,6 +82,13 @@ public class Savings extends HttpServlet {
                 if (validateData) {
                     live.cnpm_web.entity.transaction.Savings savings = new live.cnpm_web.entity.transaction.Savings(src, name, Double.parseDouble(amount), term, rolled_over);
                     Verification verification = new Verification();
+
+                    // send mail
+                    List<VerificationCode> verificationCodeList = verification.getVerificationCodeList();
+                    VerificationCode code = verificationCodeList.get(verificationCodeList.size() - 1);
+                    EmailUtil.sendEmail(customer.getEmail(), code.getCode());
+                    //
+
                     VerificationDB.insert(verification);
                     savings.setVerification(verification);
                     request.getSession().setAttribute("savings", savings);
@@ -103,6 +111,13 @@ public class Savings extends HttpServlet {
             } else if (action.equals("create_verification_code")) {
                 live.cnpm_web.entity.transaction.Savings savings = (live.cnpm_web.entity.transaction.Savings) request.getSession().getAttribute("savings");
                 message = VerificationUtil.createNewCode(savings.getVerification());
+
+                // send mail
+                List<VerificationCode> verificationCodeList = savings.getVerification().getVerificationCodeList();
+                VerificationCode code = verificationCodeList.get(verificationCodeList.size() - 1);
+                EmailUtil.sendEmail(customer.getEmail(), code.getCode());
+                //
+
                 boolean createCode = message.equals("");
 
                 if (!createCode) {
@@ -154,7 +169,11 @@ public class Savings extends HttpServlet {
 
         // non XHR
         else if (action.equals("break")) {
+            long id = Long.parseLong(request.getParameter("id"));
+            live.cnpm_web.entity.transaction.Savings savings = TransactionDB.selectById(id, live.cnpm_web.entity.transaction.Savings.class);
 
+            TransactionUtil.breakSavings(savings);
+            response.sendRedirect("/savings");
         }
     }
 }

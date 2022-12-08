@@ -26,6 +26,7 @@
       <form action="" method="post">
 
         <input type="hidden" name="action" value="break">
+        <input type="hidden" name="id" value="${savings.id}">
 
         <div class="mb-2">
           <label for="savings-name" class="form-label">Tên sổ tiết kiệm</label>

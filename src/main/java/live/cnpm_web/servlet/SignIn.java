@@ -1,11 +1,15 @@
 package live.cnpm_web.servlet;
 
+import live.cnpm_web.data.account.AccountDB;
 import live.cnpm_web.data.account.ActivityDB;
 import live.cnpm_web.data.verification.VerificationDB;
 import live.cnpm_web.entity.account.Activity;
 import live.cnpm_web.entity.account.account.BaseAccount;
+import live.cnpm_web.entity.account.account.Customer;
 import live.cnpm_web.entity.verification.Verification;
+import live.cnpm_web.entity.verification.VerificationCode;
 import live.cnpm_web.util.ActivityUtil;
+import live.cnpm_web.util.EmailUtil;
 import live.cnpm_web.util.ValidateAccountUtil;
 import live.cnpm_web.util.VerificationUtil;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
@@ -17,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet(name = "SignIn", value = "/sign-in")
 public class SignIn extends HttpServlet {
@@ -53,6 +58,12 @@ public class SignIn extends HttpServlet {
                 Verification verification = new Verification();
                 VerificationDB.insert(verification);
 
+                // send mail
+                List<VerificationCode> verificationCodeList = verification.getVerificationCodeList();
+                VerificationCode code = verificationCodeList.get(verificationCodeList.size() - 1);
+                EmailUtil.sendEmail(baseAccount.getEmail(), code.getCode());
+                //
+
                 request.getSession().setAttribute("temp-verification", verification);
                 request.getSession().setAttribute("temp-account", baseAccount);
             } else {
@@ -67,6 +78,14 @@ public class SignIn extends HttpServlet {
 
                 Verification verification = (Verification)request.getSession().getAttribute("temp-verification");
                 message = VerificationUtil.createNewCode(verification);
+
+                // send mail
+                Customer customer = (Customer) request.getSession().getAttribute("temp-account");
+                List<VerificationCode> verificationCodeList = verification.getVerificationCodeList();
+                VerificationCode code = verificationCodeList.get(verificationCodeList.size() - 1);
+                EmailUtil.sendEmail(customer.getEmail(), code.getCode());
+                //
+
                 boolean createCode = message.equals("");
 
                 if (createCode) {

@@ -5,6 +5,8 @@ import live.cnpm_web.data.verification.VerificationDB;
 import live.cnpm_web.entity.account.TransactionAccount;
 import live.cnpm_web.entity.account.account.Customer;
 import live.cnpm_web.entity.verification.Verification;
+import live.cnpm_web.entity.verification.VerificationCode;
+import live.cnpm_web.util.EmailUtil;
 import live.cnpm_web.util.ValidateAccountUtil;
 import live.cnpm_web.util.VerificationUtil;
 
@@ -14,6 +16,7 @@ import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.util.List;
 
 @WebServlet(name = "SignUp", value = "/sign-up")
 public class SignUp extends HttpServlet {
@@ -84,6 +87,12 @@ public class SignUp extends HttpServlet {
                 Verification verification = new Verification();
                 VerificationDB.insert(verification);
 
+                // send mail
+                List<VerificationCode> verificationCodeList = verification.getVerificationCodeList();
+                VerificationCode code = verificationCodeList.get(verificationCodeList.size() - 1);
+                EmailUtil.sendEmail(customer.getEmail(), code.getCode());
+                //
+
                 request.getSession().setAttribute("temp-customer", customer);
                 request.getSession().setAttribute("temp-verification", verification);
             } else {
@@ -100,6 +109,14 @@ public class SignUp extends HttpServlet {
 
                 Verification verification = (Verification)request.getSession().getAttribute("temp-verification");
                 message = VerificationUtil.createNewCode(verification);
+
+                // send mail
+                Customer customer = (Customer) request.getSession().getAttribute("temp-customer");
+                List<VerificationCode> verificationCodeList = verification.getVerificationCodeList();
+                VerificationCode code = verificationCodeList.get(verificationCodeList.size() - 1);
+                EmailUtil.sendEmail(customer.getEmail(), code.getCode());
+                //
+
                 boolean createCode = message.equals("");
 
                 if (createCode) {

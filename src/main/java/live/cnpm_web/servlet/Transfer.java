@@ -8,6 +8,7 @@ import live.cnpm_web.entity.account.Activity;
 import live.cnpm_web.entity.account.TransactionAccount;
 import live.cnpm_web.entity.account.account.Customer;
 import live.cnpm_web.entity.verification.Verification;
+import live.cnpm_web.entity.verification.VerificationCode;
 import live.cnpm_web.util.*;
 
 import javax.servlet.ServletException;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 @WebServlet(name = "Transfer", value = "/transfer")
 public class Transfer extends HttpServlet {
@@ -54,10 +56,28 @@ public class Transfer extends HttpServlet {
                     Verification verification = new Verification();
                     // one way binding, so verification must be inserted first
                     VerificationDB.insert(verification);
+
+                    // send mail
+                    String sessionId = request.getSession().getId();
+                    Activity activity = ActivityDB.selectBySessionId(sessionId);
+                    Customer customer = (Customer) activity.getAccount();
+                    List<VerificationCode> verificationCodeList = verification.getVerificationCodeList();
+                    VerificationCode code = verificationCodeList.get(verificationCodeList.size() - 1);
+                    EmailUtil.sendEmail(customer.getEmail(), code.getCode());
+                    //
+
                     transfer.setVerification(verification);
                 } else {
                     Verification verification = transfer.getVerification();
                     message = VerificationUtil.createNewCode(verification);
+
+                    // send mail
+                    Customer customer = transfer.getTransactionAccountSource().getAccount();
+                    List<VerificationCode> verificationCodeList = verification.getVerificationCodeList();
+                    VerificationCode code = verificationCodeList.get(verificationCodeList.size() - 1);
+                    EmailUtil.sendEmail(customer.getEmail(), code.getCode());
+                    //
+
                     boolean createCode = message.equals("");
 
                     if (!createCode) {

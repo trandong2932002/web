@@ -1,6 +1,11 @@
 package live.cnpm_web.util;
 
+import live.cnpm_web.data.account.AccountDB;
+import live.cnpm_web.data.account.ActivityDB;
+import live.cnpm_web.data.transaction.TransactionDB;
 import live.cnpm_web.data.verification.VerificationDB;
+import live.cnpm_web.entity.account.Activity;
+import live.cnpm_web.entity.transaction.BaseTransaction;
 import live.cnpm_web.entity.verification.Verification;
 import live.cnpm_web.entity.verification.VerificationCode;
 
@@ -38,7 +43,11 @@ public class VerificationUtil {
             VerificationCode verificationCode = new VerificationCode();
             verification.addVerificationCode(verificationCode);
 
-            System.out.println(verificationCode.getCode());
+//            System.out.println("-------------------" + verificationCode.getCode());
+
+            //
+            //
+            //
 
             VerificationDB.update(verification);
 
