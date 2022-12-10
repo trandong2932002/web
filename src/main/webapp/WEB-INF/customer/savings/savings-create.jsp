@@ -13,7 +13,7 @@
 
   <script src="${pageContext.request.contextPath}/assets/scripts/another/customer/savings/savings-create.js"
           defer></script>
-  <script src="${pageContext.request.contextPath}/assets/scripts/another/otp-input-savings.js" defer></script>
+  <script src="${pageContext.request.contextPath}/assets/scripts/another/customer/savings/otp-input-savings.js" defer></script>
 
 </head>
 <body class="bg-light">

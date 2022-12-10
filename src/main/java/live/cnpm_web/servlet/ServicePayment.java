@@ -3,10 +3,14 @@ package live.cnpm_web.servlet;
 import com.google.gson.JsonObject;
 import live.cnpm_web.data.account.AccountDB;
 import live.cnpm_web.entity.account.Activity;
+import live.cnpm_web.entity.account.ServiceAccount;
+import live.cnpm_web.entity.account.ServiceProvider;
 import live.cnpm_web.entity.account.TransactionAccount;
 import live.cnpm_web.entity.account.account.Customer;
+import live.cnpm_web.entity.transaction.Transfer;
 import live.cnpm_web.entity.verification.Verification;
 import live.cnpm_web.util.*;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,9 +19,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
-@WebServlet(name = "Transfer", value = "/transfer")
-public class Transfer extends HttpServlet {
+@WebServlet(name = "Payment", value = "/payment")
+public class ServicePayment extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String url = "";
@@ -29,11 +34,14 @@ public class Transfer extends HttpServlet {
             response.sendRedirect("/");
             return;
         } else {
-            url = "/WEB-INF/customer/transaction/transfer/transfer-create.jsp";
+            url = "/WEB-INF/customer/transaction/payment/payment-create.jsp";
         }
         // end check
         TransactionAccount src = ((Customer) activity.getAccount()).getTransactionAccount();
+        List<ServiceProvider> providerList = AccountDB.selectAll(ServiceProvider.class);
+
         request.setAttribute("src", src);
+        request.setAttribute("providerList", providerList);
 
         getServletContext().getRequestDispatcher(url).forward(request, response);
     }
@@ -50,11 +58,11 @@ public class Transfer extends HttpServlet {
         if (action == null) {
             JsonObject json = XHRUtil.parseJSONObject(request);
             action = json.get("action").getAsString();
-            live.cnpm_web.entity.transaction.Transfer transfer = (live.cnpm_web.entity.transaction.Transfer)
-                    request.getSession().getAttribute("temp-transfer");
+            Transfer transfer = (Transfer) request.getSession().getAttribute("temp-transfer");
 
             Activity activity = (Activity) request.getSession().getAttribute("activity");
             Customer customer = (Customer) activity.getAccount();
+
 
             if (action.equals("create_verification_code")) {
                 if (transfer.getVerification() == null) {
@@ -80,7 +88,9 @@ public class Transfer extends HttpServlet {
 
                 if (message.equals("")) {
                     // make transfer here
-                    TransactionUtil.transfer(transfer);
+                    // because service account is management by provider -> calc debt
+                    ServiceAccount serviceAccount = (ServiceAccount) request.getSession().getAttribute("temp-service-account");
+                    TransactionUtil.payment(transfer, serviceAccount);
 
                     message = "Thành công";
 
@@ -109,35 +119,41 @@ public class Transfer extends HttpServlet {
         // non XHR
         //
         else if (action.equals("create")) {
-            String destNumber = request.getParameter("destNumber");
-            String amount = request.getParameter("amount");
-            String content = request.getParameter("content");
+            String provider = request.getParameter("service-provider");
+            String customerCode = request.getParameter("customer-code");
 
             Activity activity = (Activity) request.getSession().getAttribute("activity");
             TransactionAccount src = ((Customer) activity.getAccount()).getTransactionAccount();
-            TransactionAccount dest = AccountDB.selectByAccountNumber(destNumber);
 
-            message = ValidateTransactionUtil.validateTransfer(src, dest, amount);
+            ImmutablePair<ServiceAccount, String> result = ValidateTransactionUtil.validateServicePayment(src, provider, customerCode);
+            message = result.getRight();
 
             if (message.equals("")) {
-                url = "/WEB-INF/customer/transaction/transfer/transfer-detail.jsp";
+                url = "/WEB-INF/customer/transaction/payment/payment-detail.jsp";
+                ServiceAccount serviceAccount = result.getLeft();
+                TransactionAccount dest = serviceAccount.getProvider().getProvider().getTransactionAccount();
+                Double amount = serviceAccount.getDebt();
+                String providerName = serviceAccount.getProvider().getName();
 
-                live.cnpm_web.entity.transaction.Transfer transfer
-                        = new live.cnpm_web.entity.transaction.Transfer(
-                        src, dest, Double.parseDouble(amount), content);
+                Transfer transfer = new Transfer(src, dest, amount, "Thanh toán hóa đơn cho " + providerName);
 
                 request.getSession().setAttribute("temp-transfer", transfer);
+                request.getSession().setAttribute("temp-service-account", serviceAccount);
+                request.setAttribute("amount", amount);
+                request.setAttribute("providerName", providerName);
             } else {
-                url = "/WEB-INF/customer/transaction/transfer/transfer-create.jsp";
+                url = "/WEB-INF/customer/transaction/payment/payment-create.jsp";
+                List<ServiceProvider> providerList = AccountDB.selectAll(ServiceProvider.class);
+
+                request.setAttribute("message", message);
+                request.setAttribute("providerList", providerList);
             }
 
             request.setAttribute("src", src);
-            request.setAttribute("destNumber", destNumber);
-            request.setAttribute("message", message);
-            request.setAttribute("amount", amount);
-            request.setAttribute("content", content);
+            request.setAttribute("customerCode", customerCode);
         }
 
         getServletContext().getRequestDispatcher(url).forward(request, response);
+
     }
 }

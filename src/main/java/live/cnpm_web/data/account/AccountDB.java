@@ -1,6 +1,7 @@
 package live.cnpm_web.data.account;
 
 import live.cnpm_web.data.BaseDB;
+import live.cnpm_web.entity.account.ServiceAccount;
 import live.cnpm_web.entity.account.TransactionAccount;
 import live.cnpm_web.entity.account.account.Customer;
 import live.cnpm_web.entity.account.account.Employee;
@@ -57,5 +58,9 @@ public class AccountDB extends BaseDB {
 
     public static Customer selectByPhoneNumber(String phoneNumber) {
         return selectByParameter("phoneNumber", phoneNumber, Customer.class);
+    }
+
+    public static ServiceAccount selectServiceAccountByCustomerCode(String customerCode) {
+        return selectByParameter("customerCode", customerCode, ServiceAccount.class);
     }
 }

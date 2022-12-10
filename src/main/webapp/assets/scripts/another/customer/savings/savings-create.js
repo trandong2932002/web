@@ -4,9 +4,11 @@
 const amount = document.getElementById("amount")
 const available_amount = document.getElementById("available-amount")
 
+if (parseInt(available_amount.value.replace(/\,/g, '')) == 0) available_amount.classList.replace("text-success", "text-danger")
+
 amount.addEventListener("input", function (e) {
     let i_amount = parseInt(amount.value)
-    let i_available_amount = parseInt(available_amount.value)
+    let i_available_amount = parseInt(available_amount.value.replace(/\,/g, ''))
 
     if (i_amount > i_available_amount) {
         available_amount.classList.replace("text-success", "text-danger")

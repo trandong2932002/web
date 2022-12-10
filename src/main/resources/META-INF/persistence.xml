@@ -19,17 +19,25 @@
         <class>live.cnpm_web.entity.account.account.Manager</class>
         <class>live.cnpm_web.entity.message.Message</class>
         <class>live.cnpm_web.entity.message.MessageDetail</class>
+        <class>live.cnpm_web.entity.account.ServiceAccount</class>
+        <class>live.cnpm_web.entity.account.ServiceProvider</class>
 
         <properties>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="hibernate.hbm2ddl.charset_name" value="UTF-8"/>
             <property name="hibernate.show_sql" value="true"/>
 
+
+            <!--            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>-->
+<!--            <property name="javax.persistence.jdbc.url"-->
+<!--                      value="jdbc:postgresql://lin-11920-3301-pgsql-primary.servers.linodedb.net:5432/postgres"/>-->
+<!--            <property name="javax.persistence.jdbc.user" value="linpostgres"/>-->
+<!--            <property name="javax.persistence.jdbc.password" value="UeNU!1S2D20oIIVr"/>-->
+
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
             <property name="javax.persistence.jdbc.url"
-                      value="jdbc:postgresql://lin-11920-3301-pgsql-primary.servers.linodedb.net:5432/postgres"/>
-            <property name="javax.persistence.jdbc.user" value="linpostgres"/>
-            <property name="javax.persistence.jdbc.password" value="UeNU!1S2D20oIIVr"/>
+                      value="jdbc:postgresql://localhost:5432/postgres"/>
+            <property name="javax.persistence.jdbc.user" value="trand"/>
         </properties>
     </persistence-unit>
 </persistence>

@@ -61,7 +61,7 @@
 
           <div class="d-flex justify-content-between">
             <p>Số tiền</p>
-            <p>${amount}</p>
+            <p><fmt:formatNumber value="${amount}" maxFractionDigits="0"/></p>
           </div>
 
           <div class="d-flex justify-content-between">

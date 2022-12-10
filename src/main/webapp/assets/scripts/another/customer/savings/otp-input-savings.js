@@ -53,7 +53,7 @@ function otp_timer() {
 }
 
 function create_verification_code() {
-    let xhr = new XMLHttpRequest();
+    let xhr = new XMLHttpRequest()
     xhr.open("POST", pathname)
     xhr.responseType = "json"
 
@@ -89,7 +89,7 @@ function create_verification_code() {
 }
 
 function create_savings() {
-    let xhr = new XMLHttpRequest();
+    let xhr = new XMLHttpRequest()
     xhr.open("POST", pathname)
     xhr.responseType = "json"
 
@@ -122,19 +122,20 @@ function create_savings() {
 
     document.getElementById("action").value = "create_savings"
     let formData = new FormData(document.getElementById("main-form"))
-    let json = JSON.stringify(Object.fromEntries(formData.entries()));
+    let json = JSON.stringify(Object.fromEntries(formData.entries()))
 
     xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8")
     xhr.send(json)
 }
 
 function check_verification_code() {
-    let xhr = new XMLHttpRequest();
+    let xhr = new XMLHttpRequest()
     xhr.open("POST", pathname)
     xhr.responseType = "json"
 
     xhr.onload = function (e) {
         let x = xhr.response
+
         if (x != null) {
             let message = x.message
 
@@ -149,6 +150,11 @@ function check_verification_code() {
             newChild.innerText = message
 
             parent.appendChild(newChild)
+
+            // go to savings page
+            setTimeout(function () {
+                window.location.href = "/savings"
+            }, 5000)
         }
     }
 

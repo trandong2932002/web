@@ -1,15 +1,9 @@
 package live.cnpm_web.servlet;
 
-import live.cnpm_web.data.account.AccountDB;
-import live.cnpm_web.data.account.ActivityDB;
-import live.cnpm_web.data.verification.VerificationDB;
 import live.cnpm_web.entity.account.Activity;
 import live.cnpm_web.entity.account.account.BaseAccount;
-import live.cnpm_web.entity.account.account.Customer;
 import live.cnpm_web.entity.verification.Verification;
-import live.cnpm_web.entity.verification.VerificationCode;
 import live.cnpm_web.util.ActivityUtil;
-import live.cnpm_web.util.EmailUtil;
 import live.cnpm_web.util.ValidateAccountUtil;
 import live.cnpm_web.util.VerificationUtil;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
@@ -19,15 +13,23 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.List;
 
 @WebServlet(name = "SignIn", value = "/sign-in")
 public class SignIn extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String url = "/WEB-INF/guest/sign-in.jsp";
+        String url = "";
+
+        // check activity session
+        Activity activity = (Activity) request.getSession().getAttribute("activity");
+        if (activity == null) {
+            url = "/WEB-INF/guest/sign-in.jsp";
+        } else {
+            response.sendRedirect("/");
+            return;
+        }
+        // end check
 
         getServletContext().getRequestDispatcher(url).forward(request, response);
     }
@@ -35,37 +37,26 @@ public class SignIn extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String url = "";
+        String message = "";
         String state = request.getParameter("action");
-        String message;
-
         String phoneNumber = request.getParameter("phone-number");
         String password = request.getParameter("password");
 
         if (state.equals("sign-in")) {
-            BaseAccount baseAccount;
-            Class<?> accountType;
 
             ImmutableTriple<String, BaseAccount, Class<?>> validate = ValidateAccountUtil.validateSignInAccount(phoneNumber, password);
             message = validate.getLeft();
-            accountType = validate.getRight();
-            baseAccount = validate.getMiddle();
+            Class<?> accountType = validate.getRight();
+            BaseAccount account = validate.getMiddle();
 
-            boolean auth = message.equals("");
-
-            if (auth) {
+            if (message.equals("")) {
                 url = "/WEB-INF/guest/verification.jsp";
 
-                Verification verification = new Verification();
-                VerificationDB.insert(verification);
-
-                // send mail
-                List<VerificationCode> verificationCodeList = verification.getVerificationCodeList();
-                VerificationCode code = verificationCodeList.get(verificationCodeList.size() - 1);
-                EmailUtil.sendEmail(baseAccount.getEmail(), code.getCode());
-                //
+                Verification verification = VerificationUtil.createVerification(account.getEmail());
 
                 request.getSession().setAttribute("temp-verification", verification);
-                request.getSession().setAttribute("temp-account", baseAccount);
+                request.getSession().setAttribute("temp-account", account);
+                request.getSession().setAttribute("accountType", accountType.getSimpleName());
             } else {
                 url = "/WEB-INF/guest/sign-in.jsp";
                 request.setAttribute("message", "Sai thông tin đăng nhập");
@@ -76,21 +67,11 @@ public class SignIn extends HttpServlet {
             if (action2.equals("create")) {
                 url = "/WEB-INF/guest/verification.jsp";
 
-                Verification verification = (Verification)request.getSession().getAttribute("temp-verification");
-                message = VerificationUtil.createNewCode(verification);
+                Verification verification = (Verification) request.getSession().getAttribute("temp-verification");
+                BaseAccount account = (BaseAccount) request.getSession().getAttribute("temp-account");
+                message = VerificationUtil.createNewCode(verification, account.getEmail());
 
-                // send mail
-                Customer customer = (Customer) request.getSession().getAttribute("temp-account");
-                List<VerificationCode> verificationCodeList = verification.getVerificationCodeList();
-                VerificationCode code = verificationCodeList.get(verificationCodeList.size() - 1);
-                EmailUtil.sendEmail(customer.getEmail(), code.getCode());
-                //
-
-                boolean createCode = message.equals("");
-
-                if (createCode) {
-
-                } else {
+                if (!message.equals("")) {
                     request.setAttribute("message", message);
                 }
             } else {
@@ -108,23 +89,15 @@ public class SignIn extends HttpServlet {
                     code += x;
                 }
 
-                Verification verification = (Verification)request.getSession().getAttribute("temp-verification");
+                Verification verification = (Verification) request.getSession().getAttribute("temp-verification");
                 message = VerificationUtil.verify(verification, code);
                 boolean verify = message.equals("");
 
                 if (verify) {
-                    url = "/";
-                    HttpSession session = request.getSession();
-                    BaseAccount account = (BaseAccount) session.getAttribute("temp-account");
+                    BaseAccount account = (BaseAccount) request.getSession().getAttribute("temp-account");
+                    ActivityUtil.createActivity(account, verification, request.getSession().getId());
 
-                    Activity activity = ActivityUtil.createActivity(account, verification, session.getId());
-
-                    // session will lost after redirect
-                    // solution 1: use filter
-                    // solution 2: save data in database (my choice)
-
-                    ActivityUtil.clearSession(session);
-                    response.sendRedirect(url);
+                    response.sendRedirect("/");
                     return;
                 } else {
                     url = "/WEB-INF/guest/verification.jsp";

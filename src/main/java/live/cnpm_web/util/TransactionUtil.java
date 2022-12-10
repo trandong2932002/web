@@ -2,6 +2,7 @@ package live.cnpm_web.util;
 
 import live.cnpm_web.data.account.AccountDB;
 import live.cnpm_web.data.transaction.TransactionDB;
+import live.cnpm_web.entity.account.ServiceAccount;
 import live.cnpm_web.entity.account.TransactionAccount;
 import live.cnpm_web.entity.transaction.Savings;
 import live.cnpm_web.entity.transaction.Transfer;
@@ -32,6 +33,33 @@ public class TransactionUtil {
 
         AccountDB.update(src);
         AccountDB.update(dest);
+    }
+
+    public static void payment(Transfer transfer, ServiceAccount serviceAccount) {
+        transfer.setCreatedTime(LocalDateTime.now());
+        transfer.setContent("payment");
+        TransactionDB.insert(transfer);
+
+        // transfer money here
+        // must be sync
+        Double amount = transfer.getAmount();
+        TransactionAccount src = transfer.getTransactionAccountSource();
+        TransactionAccount dest = transfer.getTransactionAccountDestination();
+
+        Double srcBalance = src.getBalance();
+        Double destBalance = dest.getBalance();
+        srcBalance -= amount;
+        destBalance += amount;
+
+        src.setBalance(srcBalance);
+        dest.setBalance(destBalance);
+
+        AccountDB.update(src);
+        AccountDB.update(dest);
+
+        // clear debt
+        serviceAccount.setDebt(0D);
+        AccountDB.update(serviceAccount);
     }
 
     public static void savings(Savings savings) {
@@ -145,5 +173,6 @@ public class TransactionUtil {
         Savings newSavings = new Savings(savings.getTransactionAccountSource(), savings.getName(), amountDiff,  savings.getTerm().getNum(), Savings.RolledOver.NO.getNum());
         savings(newSavings);
     }
+
 
 }

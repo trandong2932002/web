@@ -4,6 +4,7 @@
     <option name="state">
       <map>
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/customer/loan/loan-page.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/customer/loan" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/customer/transaction-history/transaction-history.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/customer/transaction-history" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/customer/transaction/transfer/transfer-create.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/customer/transaction/transfer" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/guest/sign-in.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/guest" />
       </map>

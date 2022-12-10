@@ -1,19 +1,18 @@
 package live.cnpm_web.servlet;
 
 import com.google.gson.JsonObject;
-import live.cnpm_web.data.account.ActivityDB;
 import live.cnpm_web.data.transaction.TransactionDB;
-import live.cnpm_web.data.verification.VerificationDB;
 import live.cnpm_web.entity.account.Activity;
 import live.cnpm_web.entity.account.TransactionAccount;
 import live.cnpm_web.entity.account.account.Customer;
 import live.cnpm_web.entity.verification.Verification;
-import live.cnpm_web.entity.verification.VerificationCode;
 import live.cnpm_web.util.*;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -25,10 +24,17 @@ public class Savings extends HttpServlet {
         String url = "";
         String action = request.getParameter("action");
 
-        String sessionId = request.getSession().getId();
-        Activity activity = ActivityDB.selectBySessionId(sessionId);
-        Customer customer = (Customer) activity.getAccount();
-        TransactionAccount src = customer.getTransactionAccount();
+        // check activity session
+        Activity activity = (Activity) request.getSession().getAttribute("activity");
+        String accountType = (String) request.getSession().getAttribute("accountType");
+        if (activity == null || !accountType.equals("Customer")) {
+            response.sendRedirect("/");
+            return;
+        } else {
+            url = "/WEB-INF/customer/customer-information/information.jsp";
+        }
+        TransactionAccount src = ((Customer) activity.getAccount()).getTransactionAccount();
+        // end check
 
         if (action == null) {
             url = "/WEB-INF/customer/savings/savings-page.jsp";
@@ -42,16 +48,17 @@ public class Savings extends HttpServlet {
             url = "/WEB-INF/customer/savings/savings-create.jsp";
         } else if (action.equals("information")) {
             String id = request.getParameter("id");
-
             live.cnpm_web.entity.transaction.Savings savings = TransactionDB.selectById(Long.parseLong(id), live.cnpm_web.entity.transaction.Savings.class);
-
-            request.setAttribute("savings", savings);
-
-            url = "/WEB-INF/customer/savings/savings-information.jsp";
+            if (savings == null || !savings.getTransactionAccountSource().getAccountNumber().equals(src.getAccountNumber())) {
+                response.sendRedirect("/savings");
+                return;
+            } else {
+                request.setAttribute("savings", savings);
+                url = "/WEB-INF/customer/savings/savings-information.jsp";
+            }
         }
 
         request.setAttribute("src", src);
-
         getServletContext().getRequestDispatcher(url).forward(request, response);
     }
 
@@ -61,8 +68,7 @@ public class Savings extends HttpServlet {
         String message = "";
         String action = request.getParameter("action");
 
-        String sessionId = request.getSession().getId();
-        Activity activity = ActivityDB.selectBySessionId(sessionId);
+        Activity activity = (Activity) request.getSession().getAttribute("activity");
         Customer customer = (Customer) activity.getAccount();
         TransactionAccount src = customer.getTransactionAccount();
 
@@ -77,55 +83,37 @@ public class Savings extends HttpServlet {
                 int rolled_over = Integer.parseInt(json.get("rolled-over").getAsString());
 
                 message = ValidateTransactionUtil.validateSavings(src, amount);
-                boolean validateData = message.equals("");
 
-                if (validateData) {
+                if (message.equals("")) {
                     live.cnpm_web.entity.transaction.Savings savings = new live.cnpm_web.entity.transaction.Savings(src, name, Double.parseDouble(amount), term, rolled_over);
-                    Verification verification = new Verification();
+                    Verification verification = VerificationUtil.createVerification(customer.getEmail());
 
-                    // send mail
-                    List<VerificationCode> verificationCodeList = verification.getVerificationCodeList();
-                    VerificationCode code = verificationCodeList.get(verificationCodeList.size() - 1);
-                    EmailUtil.sendEmail(customer.getEmail(), code.getCode());
-                    //
-
-                    VerificationDB.insert(verification);
                     savings.setVerification(verification);
                     request.getSession().setAttribute("savings", savings);
 
                     String a = XHRUtil.getJSONString(new JSONMessage(true, ""));
-                    PrintWriter out = response.getWriter();
-                    response.setContentType("application/json; charset=UTF-8");
+                    response.setContentType("application/json");
                     response.setCharacterEncoding("UTF-8");
+                    PrintWriter out = response.getWriter();
                     out.print(a);
                     out.flush();
                 } else {
                     String a = XHRUtil.getJSONString(new JSONMessage(false, message));
-
-                    PrintWriter out = response.getWriter();
                     response.setContentType("application/json");
                     response.setCharacterEncoding("UTF-8");
+                    PrintWriter out = response.getWriter();
                     out.print(a);
                     out.flush();
                 }
             } else if (action.equals("create_verification_code")) {
                 live.cnpm_web.entity.transaction.Savings savings = (live.cnpm_web.entity.transaction.Savings) request.getSession().getAttribute("savings");
-                message = VerificationUtil.createNewCode(savings.getVerification());
+                message = VerificationUtil.createNewCode(savings.getVerification(), "");
 
-                // send mail
-                List<VerificationCode> verificationCodeList = savings.getVerification().getVerificationCodeList();
-                VerificationCode code = verificationCodeList.get(verificationCodeList.size() - 1);
-                EmailUtil.sendEmail(customer.getEmail(), code.getCode());
-                //
-
-                boolean createCode = message.equals("");
-
-                if (!createCode) {
+                if (!message.equals("")) {
                     String a = XHRUtil.getJSONString(new JSONMessage(false, message));
-
-                    PrintWriter out = response.getWriter();
                     response.setContentType("application/json");
                     response.setCharacterEncoding("UTF-8");
+                    PrintWriter out = response.getWriter();
                     out.print(a);
                     out.flush();
                 }
@@ -133,33 +121,26 @@ public class Savings extends HttpServlet {
                 String code = json.get("verification_code").getAsString();
                 live.cnpm_web.entity.transaction.Savings savings = (live.cnpm_web.entity.transaction.Savings) request.getSession().getAttribute("savings");
                 message = VerificationUtil.verify(savings.getVerification(), code);
-                boolean verify = message.equals("");
 
-                if (verify) {
+                if (message.equals("")) {
                     // make transfer here
                     TransactionUtil.savings(savings);
 
                     message = "Thành công";
 
-                    String a = XHRUtil.getJSONString(
-                            new JSONMessage(true, message)
-                    );
-
-                    PrintWriter out = response.getWriter();
+                    String a = XHRUtil.getJSONString(new JSONMessage(true, message));
                     response.setContentType("application/json");
                     response.setCharacterEncoding("UTF-8");
+                    PrintWriter out = response.getWriter();
                     out.print(a);
                     out.flush();
-                    ActivityUtil.clearSession(request.getSession());
+                    ActivityUtil.clearTempSession(request.getSession());
                 } else {
 
-                    String a = XHRUtil.getJSONString(
-                            new JSONMessage(false, message)
-                    );
-
-                    PrintWriter out = response.getWriter();
+                    String a = XHRUtil.getJSONString(new JSONMessage(false, message));
                     response.setContentType("application/json");
                     response.setCharacterEncoding("UTF-8");
+                    PrintWriter out = response.getWriter();
                     out.print(a);
                     out.flush();
                 }

@@ -1,14 +1,15 @@
 package live.cnpm_web.servlet;
 
 import live.cnpm_web.data.account.AccountDB;
-import live.cnpm_web.data.account.ActivityDB;
 import live.cnpm_web.entity.account.Activity;
 import live.cnpm_web.entity.account.account.Customer;
 import live.cnpm_web.util.ValidateAccountUtil;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
 
@@ -16,13 +17,18 @@ import java.time.LocalDate;
 public class ChangeInformation extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String url = "/WEB-INF/customer/customer-information/information.jsp";
+        String url = "";
 
-        String sessionId = request.getSession().getId();
-        Activity activity = ActivityDB.selectBySessionId(sessionId);
-        Customer customer = (Customer)activity.getAccount();
-
-        request.setAttribute("customer", customer);
+        // check activity session
+        Activity activity = (Activity) request.getSession().getAttribute("activity");
+        String accountType = (String) request.getSession().getAttribute("accountType");
+        if (activity == null || !accountType.equals("Customer")) {
+            response.sendRedirect("/");
+            return;
+        } else {
+            url = "/WEB-INF/customer/customer-information/information.jsp";
+        }
+        // end check
 
         getServletContext().getRequestDispatcher(url).forward(request, response);
     }
@@ -43,10 +49,9 @@ public class ChangeInformation extends HttpServlet {
         String city = request.getParameter("city-province");
 
         message = ValidateAccountUtil.validateBasicInformation(firstname, lastname, dob, address, district, city);
-        boolean validateData = message.equals("");
 
-        if (validateData) {
-            Customer customer = (Customer) ActivityDB.selectBySessionId(request.getSession().getId()).getAccount();
+        if (message.equals("")) {
+            Customer customer = (Customer) ((Activity) request.getSession().getAttribute("activity")).getAccount();
             customer.setFirstname(firstname);
             customer.setLastname(lastname);
             customer.setDob(LocalDate.parse(dob));
@@ -59,7 +64,7 @@ public class ChangeInformation extends HttpServlet {
             request.setAttribute("customer", customer);
         }
 
-        request.setAttribute("status", validateData);
+        request.setAttribute("status", message.equals(""));
         request.setAttribute("message", message);
 
         request.setAttribute("firstname", firstname);

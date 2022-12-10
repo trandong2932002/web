@@ -1,28 +1,37 @@
 package live.cnpm_web.servlet;
 
 import live.cnpm_web.data.account.AccountDB;
-import live.cnpm_web.data.verification.VerificationDB;
+import live.cnpm_web.entity.account.Activity;
 import live.cnpm_web.entity.account.TransactionAccount;
 import live.cnpm_web.entity.account.account.Customer;
 import live.cnpm_web.entity.verification.Verification;
-import live.cnpm_web.entity.verification.VerificationCode;
-import live.cnpm_web.util.EmailUtil;
 import live.cnpm_web.util.ValidateAccountUtil;
 import live.cnpm_web.util.VerificationUtil;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.util.List;
 
 @WebServlet(name = "SignUp", value = "/sign-up")
 public class SignUp extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String url = "/WEB-INF/guest/sign-up/basic-information.jsp";
+        String url = "";
+
+        // check activity session
+        Activity activity = (Activity) request.getSession().getAttribute("activity");
+        if (activity == null) {
+            url = "/WEB-INF/guest/sign-up/basic-information.jsp";
+        } else {
+            response.sendRedirect("/");
+            return;
+        }
+        // end check
+
         getServletContext().getRequestDispatcher(url).forward(request, response);
     }
 
@@ -31,8 +40,8 @@ public class SignUp extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         String url = "";
+        String message = "";
         String state = request.getParameter("action");
-        String message;
 
         if (state.equals("basic-information")) {
             // validate data 1
@@ -44,9 +53,8 @@ public class SignUp extends HttpServlet {
             String city = request.getParameter("city-province");
 
             message = ValidateAccountUtil.validateBasicInformation(firstname, lastname, dob, address, district, city);
-            boolean validateData = message.equals("");
 
-            if (validateData) {
+            if (message.equals("")) {
                 url = "/WEB-INF/guest/sign-up/contact-information.jsp";
 
                 Customer customer = new Customer();
@@ -54,13 +62,13 @@ public class SignUp extends HttpServlet {
                 customer.setLastname(lastname);
                 customer.setDob(LocalDate.parse(dob));
                 customer.setAddress(address);
-
                 request.getSession().setAttribute("temp-customer", customer);
             } else {
                 url = "/WEB-INF/guest/sign-up/basic-information.jsp";
+
                 request.setAttribute("message", message);
-                request.setAttribute("firstname", new String(firstname.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8));
-                request.setAttribute("lastname", new String(lastname.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8));
+                request.setAttribute("firstname", firstname);
+                request.setAttribute("lastname", lastname);
                 request.setAttribute("dob", dob);
                 request.setAttribute("address", address);
                 request.setAttribute("district", district);
@@ -74,9 +82,8 @@ public class SignUp extends HttpServlet {
             String retypePassword = request.getParameter("retype-password");
 
             message = ValidateAccountUtil.validateContactInformation(email, phoneNumber, password, retypePassword);
-            boolean validateData = message.equals("");
 
-            if (validateData) {
+            if (message.equals("")) {
                 url = "/WEB-INF/guest/verification.jsp";
 
                 Customer customer = (Customer) request.getSession().getAttribute("temp-customer");
@@ -84,19 +91,13 @@ public class SignUp extends HttpServlet {
                 customer.setPhoneNumber(phoneNumber);
                 customer.setPassword(password);
 
-                Verification verification = new Verification();
-                VerificationDB.insert(verification);
-
-                // send mail
-                List<VerificationCode> verificationCodeList = verification.getVerificationCodeList();
-                VerificationCode code = verificationCodeList.get(verificationCodeList.size() - 1);
-                EmailUtil.sendEmail(customer.getEmail(), code.getCode());
-                //
+                Verification verification = VerificationUtil.createVerification(email);
 
                 request.getSession().setAttribute("temp-customer", customer);
                 request.getSession().setAttribute("temp-verification", verification);
             } else {
                 url = "/WEB-INF/guest/sign-up/contact-information.jsp";
+
                 request.setAttribute("message", message);
                 request.setAttribute("email", email);
                 request.setAttribute("phoneNumber", phoneNumber);
@@ -107,21 +108,11 @@ public class SignUp extends HttpServlet {
             if (action2.equals("create")) {
                 url = "/WEB-INF/guest/verification.jsp";
 
-                Verification verification = (Verification)request.getSession().getAttribute("temp-verification");
-                message = VerificationUtil.createNewCode(verification);
-
-                // send mail
+                Verification verification = (Verification) request.getSession().getAttribute("temp-verification");
                 Customer customer = (Customer) request.getSession().getAttribute("temp-customer");
-                List<VerificationCode> verificationCodeList = verification.getVerificationCodeList();
-                VerificationCode code = verificationCodeList.get(verificationCodeList.size() - 1);
-                EmailUtil.sendEmail(customer.getEmail(), code.getCode());
-                //
+                message = VerificationUtil.createNewCode(verification, customer.getEmail());
 
-                boolean createCode = message.equals("");
-
-                if (createCode) {
-
-                } else {
+                if (!message.equals("")) {
                     request.setAttribute("message", message);
                 }
             } else {
@@ -139,27 +130,22 @@ public class SignUp extends HttpServlet {
                     code += x;
                 }
 
-                Verification verification = (Verification)request.getSession().getAttribute("temp-verification");
+                Verification verification = (Verification) request.getSession().getAttribute("temp-verification");
                 message = VerificationUtil.verify(verification, code);
-                boolean verify = message.equals("");
 
-                if (verify) {
-                    url = "/sign-in";
-                    HttpSession session = request.getSession();
-
-                    Customer customer = (Customer) session.getAttribute("temp-customer");
+                if (message.equals("")) {
+                    Customer customer = (Customer) request.getSession().getAttribute("temp-customer");
 
                     // create transaction account
                     TransactionAccount transactionAccount = new TransactionAccount();
                     customer.addTransactionAccount(transactionAccount);
-
                     AccountDB.insert(customer);
 
                     // clear session
-                    session.removeAttribute("temp-customer");
-                    session.removeAttribute("temp-verification");
+                    request.getSession().removeAttribute("temp-customer");
+                    request.getSession().removeAttribute("temp-verification");
 
-                    response.sendRedirect(url);
+                    response.sendRedirect("/sign-in");
                     return;
                 } else {
                     url = "/WEB-INF/guest/verification.jsp";

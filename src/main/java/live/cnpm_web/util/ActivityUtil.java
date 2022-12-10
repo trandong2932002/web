@@ -4,23 +4,23 @@ import live.cnpm_web.data.account.ActivityDB;
 import live.cnpm_web.entity.account.Activity;
 import live.cnpm_web.entity.account.account.BaseAccount;
 import live.cnpm_web.entity.verification.Verification;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.Enumeration;
 
 public class ActivityUtil {
-    public static String checkActivity(Activity activity) {
+    public static ImmutablePair<Activity, String> checkGuestSessionActivity(String sessionId) {
+        Activity activity = ActivityDB.selectBySessionId(sessionId);
         LocalDateTime now = LocalDateTime.now();
-        if (activity == null) return "null";
-        if (activity.getEndTime() != null &&  activity.getEndTime().isBefore(now)) {
-            return "Phiên đã hết hạn, hãy đăng nhập lại";
-        } else if (activity.getExpiredTime().isAfter(now)) {
-            return "";
-        } else {
-            return "Phiên đã hết hạn, hãy đăng nhập lại";
-        }
+        if (activity == null) return new ImmutablePair<>(null, "Phiên đã hết hạn, hãy đăng nhập lại");
+        else if ((activity.getEndTime() != null && activity.getEndTime().isBefore(now)) || activity.getExpiredTime().isBefore(now))
+            return new ImmutablePair<>(null, "Phiên đã hết hạn, hãy đăng nhập lại");
+        else return new ImmutablePair<>(activity, "");
     }
+
+//    public static void check
 
     public static Activity createActivity(BaseAccount account, Verification verification, String sessionId) {
         Activity activity = new Activity(account, verification, sessionId);
@@ -28,10 +28,13 @@ public class ActivityUtil {
         return activity;
     }
 
-    public static void clearSession(HttpSession session) {
+    public static void clearTempSession(HttpSession session) {
         Enumeration<String> attributeNames = session.getAttributeNames();
         while (attributeNames.hasMoreElements()) {
-            session.removeAttribute(attributeNames.nextElement());
+            String attributeName = attributeNames.nextElement();
+            if (attributeName.contains("temp")) {
+                session.removeAttribute(attributeName);
+            }
         }
     }
 }

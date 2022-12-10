@@ -59,10 +59,11 @@
           <p class="h5 mb-3">Bên cung cấp dịch vụ</p>
 
           <div class="mb-2">
-            <label for="service" class="form-label">Loại dịch vụ</label>
-            <select name="service" id="service" class="form-control">
-              <option value="1">Điện</option>
-              <option value="2">Nước</option>
+            <label for="service-provider" class="form-label">Loại dịch vụ</label>
+            <select name="service-provider" id="service-provider" class="form-control">
+              <c:forEach items="${providerList}" var="provider" varStatus="loop">
+                <option value="${provider.id}">${provider.name}</option>
+              </c:forEach>
             </select>
           </div>
 

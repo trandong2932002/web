@@ -1,5 +1,6 @@
 package live.cnpm_web.entity.transaction;
 
+import com.google.gson.annotations.Expose;
 import live.cnpm_web.entity.account.TransactionAccount;
 import live.cnpm_web.entity.verification.Verification;
 
