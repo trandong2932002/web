@@ -10,54 +10,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f77824d6-ddd9-4e60-b118-7a643f912bb7" name="Changes" comment="entity2">
-      <change afterPath="$PROJECT_DIR$/src/main/java/live/cnpm_web/entity/transaction/savings/SavingsInterest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/live/cnpm_web/servlet/manager/BankTransactionHistory.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/live/cnpm_web/servlet/manager/ChangeInterest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/live/cnpm_web/servlet/manager/CustomerManagement.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/live/cnpm_web/servlet/manager/EmployeeManagement.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/live/cnpm_web/util/SavingsInterestUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/META-INF/savings_interest" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/manager/bank-transaction-history.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/manager/change-interest.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/manager/customer-management.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/manager/dependencies/nav.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/manager/employee-management.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/manager/main-page.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/731bbc11-ca60-4db9-b362-f22c259e3581.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/731bbc11-ca60-4db9-b362-f22c259e3581.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/731bbc11-ca60-4db9-b362-f22c259e3581/storage_v2/_src_/database/postgres.edMnLQ/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/731bbc11-ca60-4db9-b362-f22c259e3581/storage_v2/_src_/database/postgres.edMnLQ/schema/public.abK9xQ.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/META-INF/base_sql.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/live/cnpm_web/data/account/ActivityDB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/live/cnpm_web/data/account/ActivityDB.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/live/cnpm_web/data/transaction/TransactionDB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/live/cnpm_web/data/transaction/TransactionDB.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/live/cnpm_web/entity/account/ServiceAccount.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/live/cnpm_web/entity/account/ServiceAccount.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/live/cnpm_web/entity/account/account/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/live/cnpm_web/entity/account/account/Customer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/live/cnpm_web/entity/account/account/Employee.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/live/cnpm_web/entity/account/account/Employee.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/live/cnpm_web/entity/account/account/Manager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/live/cnpm_web/entity/account/account/Manager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/live/cnpm_web/entity/message/MessageDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/live/cnpm_web/entity/message/MessageDetail.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/live/cnpm_web/entity/transaction/BaseTransaction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/live/cnpm_web/entity/transaction/BaseTransaction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/live/cnpm_web/entity/transaction/Savings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/live/cnpm_web/entity/transaction/savings/Savings.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/live/cnpm_web/entity/verification/VerificationCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/live/cnpm_web/entity/verification/VerificationCode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/live/cnpm_web/servlet/ChangePassword.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/live/cnpm_web/servlet/ChangePassword.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/live/cnpm_web/servlet/Employee/Savings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/live/cnpm_web/servlet/Employee/Savings.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/live/cnpm_web/servlet/Employee/TransactionEmp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/live/cnpm_web/servlet/Employee/TransactionEmp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/live/cnpm_web/servlet/Home.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/live/cnpm_web/servlet/Home.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/live/cnpm_web/servlet/Loan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/live/cnpm_web/servlet/Loan.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/live/cnpm_web/servlet/Savings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/live/cnpm_web/servlet/Savings.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/live/cnpm_web/servlet/TransactionHistory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/live/cnpm_web/servlet/TransactionHistory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/live/cnpm_web/util/CheckSavingsEachDay.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/live/cnpm_web/util/CheckSavingsEachDay.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/live/cnpm_web/util/TransactionUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/live/cnpm_web/util/TransactionUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/live/cnpm_web/util/VerificationUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/live/cnpm_web/util/VerificationUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/email" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/email" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/persistence.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/persistence.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/customer/customer-information/information.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/customer/customer-information/information.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/customer/customer-information/password.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/customer/customer-information/password.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/customer/dependencies/nav.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/customer/dependencies/nav.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/customer/savings/savings-page.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/customer/savings/savings-page.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/customer/transaction-history/transaction-history.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/customer/transaction-history/transaction-history.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/customer/transaction/payment/payment-detail.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/customer/transaction/payment/payment-detail.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/guest/dependencies/nav.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/guest/dependencies/nav.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/guest/sign-in.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/guest/sign-in.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/guest/verification.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/guest/verification.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/assets/scripts/another/customer/savings/savings-create.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/assets/scripts/another/customer/savings/savings-create.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -289,7 +244,7 @@
       <workItem from="1670652448035" duration="24177000" />
       <workItem from="1670690927502" duration="8127000" />
       <workItem from="1670732009763" duration="9347000" />
-      <workItem from="1670754475493" duration="16893000" />
+      <workItem from="1670754475493" duration="18249000" />
     </task>
     <task id="LOCAL-00001" summary="entity">
       <created>1670328023028</created>
