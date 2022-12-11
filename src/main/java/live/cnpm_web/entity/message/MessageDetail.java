@@ -1,7 +1,5 @@
 package live.cnpm_web.entity.message;
 
-import live.cnpm_web.entity.verification.VerificationCode;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;

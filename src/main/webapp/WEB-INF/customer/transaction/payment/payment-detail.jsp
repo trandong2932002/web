@@ -4,7 +4,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <title>Thanh toán hóa đơn</title>
+  <title>Thanh Toán Hóa Đơn</title>
 
   <%@include file="/WEB-INF/dependencies/meta.html" %>
   <%@include file="/WEB-INF/dependencies/script.jsp" %>

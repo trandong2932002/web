@@ -1,7 +1,5 @@
 package live.cnpm_web.entity.account;
 
-import live.cnpm_web.entity.account.account.Customer;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Random;

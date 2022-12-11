@@ -7,7 +7,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item"><a class="nav-link" href="/">Trang chủ</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">CSKH</a></li>
+<%--          <li class="nav-item"><a class="nav-link" href="#">CSKH</a></li>--%>
         </ul>
         <div class="d-md-flex justify-content-md-end flex-grow-1">
           <ul class="navbar-nav">

@@ -3,7 +3,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <title>Thông tin cá nhân</title>
+  <title>Thông Tin Cá Nhân</title>
 
   <%@include file="/WEB-INF/dependencies/meta.html" %>
   <%@include file="/WEB-INF/dependencies/script.jsp" %>

@@ -57,7 +57,7 @@
                           <c:choose>
                             <c:when test="${not empty savings.endTime}">
                               <fmt:parseDate value="${savings.endTime}" pattern="y-M-dd'T'H:m" var="parseEndTime"></fmt:parseDate>
-                              <fmt:formatDate value="${parseEndTime}" pattern="yyyy/MM/dd" />
+                              <fmt:formatDate value="${parseEndTime}" pattern="yyyy-MM-dd" />
                             </c:when>
                             <c:otherwise>Chưa rút</c:otherwise>
                           </c:choose>

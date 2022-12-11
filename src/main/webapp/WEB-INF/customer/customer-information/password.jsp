@@ -3,7 +3,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <title>Đổi mật khẩu</title>
+  <title>Đổi Mật Khẩu</title>
 
   <%@include file="/WEB-INF/dependencies/meta.html" %>
   <%@include file="/WEB-INF/dependencies/script.jsp" %>

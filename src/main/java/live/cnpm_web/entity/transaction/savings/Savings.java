@@ -1,11 +1,14 @@
-package live.cnpm_web.entity.transaction;
+package live.cnpm_web.entity.transaction.savings;
 
 import live.cnpm_web.data.account.AccountDB;
 import live.cnpm_web.entity.account.TransactionAccount;
+import live.cnpm_web.entity.transaction.BaseTransaction;
+import live.cnpm_web.util.SavingsInterestUtil;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "Savings")
@@ -93,22 +96,20 @@ public class Savings extends BaseTransaction {
         this.term = Term.getValue(term);
         this.rolledOver = RolledOver.getValue(rolledOver);
         this.status = SavingsStatus.INPROGRESS;
-        switch (term) {
-            case 0:
-            case 1:
-                this.interest = 0.05;
-                this.penaltyInterest = 0.008;
+
+        // load term - interest - penalty interest
+        List<SavingsInterest> interestList = SavingsInterestUtil.getSavingsInterestList();
+
+        for (SavingsInterest temp : interestList) {
+            Term i_term = temp.getTerm();
+            double interest = temp.getInterest();
+            double penaltyInterest = temp.getPenaltyInterest();
+
+            if (Term.getValue(term) == i_term) {
+                this.interest = interest;
+                this.penaltyInterest = penaltyInterest;
                 break;
-            case 2:
-            case 3:
-                this.interest = 0.06;
-                this.penaltyInterest = 0.008;
-                break;
-            case 4:
-            case 5:
-                this.interest = 0.07;
-                this.penaltyInterest = 0.008;
-                break;
+            }
         }
 
         setTransactionAccountSource(src);

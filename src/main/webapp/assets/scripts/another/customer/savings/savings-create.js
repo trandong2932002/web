@@ -28,6 +28,7 @@ const create_date = document.getElementById("create-date")
 const maturity_date = document.getElementById("maturity-date")
 
 const interest_rates = {
+
     "1 tháng": "5%",
     "3 tháng": "5%",
     "6 tháng": "6%",

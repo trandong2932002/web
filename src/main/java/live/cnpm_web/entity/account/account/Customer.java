@@ -3,7 +3,6 @@ package live.cnpm_web.entity.account.account;
 import live.cnpm_web.entity.account.TransactionAccount;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity

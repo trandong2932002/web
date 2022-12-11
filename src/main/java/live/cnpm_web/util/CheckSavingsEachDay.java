@@ -1,7 +1,7 @@
 package live.cnpm_web.util;
 
 import live.cnpm_web.data.transaction.TransactionDB;
-import live.cnpm_web.entity.transaction.Savings;
+import live.cnpm_web.entity.transaction.savings.Savings;
 
 import java.time.LocalDate;
 import java.util.List;

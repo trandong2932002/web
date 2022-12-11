@@ -4,7 +4,6 @@ import live.cnpm_web.data.account.AccountDB;
 import live.cnpm_web.data.transaction.TransactionDB;
 import live.cnpm_web.entity.account.TransactionAccount;
 import live.cnpm_web.entity.account.account.Customer;
-import live.cnpm_web.entity.transaction.BaseTransaction;
 import live.cnpm_web.entity.transaction.Transfer;
 
 import javax.servlet.ServletException;

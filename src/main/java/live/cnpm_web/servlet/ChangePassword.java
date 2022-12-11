@@ -1,14 +1,15 @@
 package live.cnpm_web.servlet;
 
 import live.cnpm_web.data.account.AccountDB;
-import live.cnpm_web.data.account.ActivityDB;
 import live.cnpm_web.entity.account.Activity;
 import live.cnpm_web.entity.account.account.Customer;
 import live.cnpm_web.util.ValidateAccountUtil;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(name = "ChangePassword", value = "/change-password")

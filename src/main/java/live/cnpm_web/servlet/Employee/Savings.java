@@ -4,7 +4,6 @@ import live.cnpm_web.data.account.AccountDB;
 import live.cnpm_web.data.transaction.TransactionDB;
 import live.cnpm_web.entity.account.TransactionAccount;
 import live.cnpm_web.entity.account.account.Customer;
-import live.cnpm_web.entity.transaction.BaseTransaction;
 import live.cnpm_web.entity.transaction.Transfer;
 
 import javax.servlet.ServletException;
@@ -29,7 +28,7 @@ public class Savings extends HttpServlet {
         }
         else {
             String url = "/WEB-INF/employee/deposit/deposit.jsp";
-            List<live.cnpm_web.entity.transaction.Savings> list_savings = TransactionDB.selectAll(live.cnpm_web.entity.transaction.Savings.class);
+            List<live.cnpm_web.entity.transaction.savings.Savings> list_savings = TransactionDB.selectAll(live.cnpm_web.entity.transaction.savings.Savings.class);
             req.setAttribute("list_savings", list_savings);
             System.out.println(list_savings);
             getServletContext().getRequestDispatcher(url)
@@ -101,18 +100,18 @@ public class Savings extends HttpServlet {
             Customer customer = AccountDB.selectByPhoneNumber(account);
             TransactionAccount transactionAccount_src = customer.getTransactionAccount();
 
-            live.cnpm_web.entity.transaction.Savings savings = new live.cnpm_web.entity.transaction.Savings();
+            live.cnpm_web.entity.transaction.savings.Savings savings = new live.cnpm_web.entity.transaction.savings.Savings();
             savings.setAmount(Double.valueOf(amount));
             savings.setCreatedTime(LocalDateTime.now());
             savings.setName(savings_name);
-            savings.setStatus(live.cnpm_web.entity.transaction.Savings.SavingsStatus.INPROGRESS);
+            savings.setStatus(live.cnpm_web.entity.transaction.savings.Savings.SavingsStatus.INPROGRESS);
             savings.setTransactionAccountSource(transactionAccount_src);
             savings.setCreatedDate(LocalDate.parse(create_date));
             savings.setEndTime(LocalDateTime.parse(maturity_date +"T00:00:00"));// end day
             savings.setInterest(Double.valueOf(interest));
             savings.setPenaltyInterest(Double.valueOf("0.08"));
-            savings.setRolledOver(live.cnpm_web.entity.transaction.Savings.RolledOver.NO);
-            savings.setTerm(live.cnpm_web.entity.transaction.Savings.Term.getValue(Integer.parseInt(term)));
+            savings.setRolledOver(live.cnpm_web.entity.transaction.savings.Savings.RolledOver.NO);
+            savings.setTerm(live.cnpm_web.entity.transaction.savings.Savings.Term.getValue(Integer.parseInt(term)));
             savings.setMaturityDate();
 
             // trừ tiền trong tài khoản
@@ -133,7 +132,7 @@ public class Savings extends HttpServlet {
                 resp.sendRedirect("/savings-emp");
             }
             else {
-                List<live.cnpm_web.entity.transaction.Savings> list_savings = TransactionDB.selectAllByTransactionAccount(customer.getTransactionAccount(), live.cnpm_web.entity.transaction.Savings.class);
+                List<live.cnpm_web.entity.transaction.savings.Savings> list_savings = TransactionDB.selectAllByTransactionAccount(customer.getTransactionAccount(), live.cnpm_web.entity.transaction.savings.Savings.class);
                 req.setAttribute("list_savings", list_savings);
                 req.setAttribute("account", customer);
                 System.out.println(list_savings.toString());
@@ -144,7 +143,7 @@ public class Savings extends HttpServlet {
             String savings_id = req.getParameter("savings-id");
             String phone_number = req.getParameter("phone-number");
 
-            live.cnpm_web.entity.transaction.Savings savings = TransactionDB.selectById(Long.valueOf(savings_id), live.cnpm_web.entity.transaction.Savings.class);
+            live.cnpm_web.entity.transaction.savings.Savings savings = TransactionDB.selectById(Long.valueOf(savings_id), live.cnpm_web.entity.transaction.savings.Savings.class);
             Customer customer = AccountDB.selectById(Long.valueOf(savings.getTransactionAccountSource().getId()), Customer.class);
             TransactionAccount transactionAccount = customer.getTransactionAccount();
 

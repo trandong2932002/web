@@ -6,7 +6,7 @@
     <persistence-unit name="default">
         <class>live.cnpm_web.entity.transaction.BaseTransaction</class>
         <class>live.cnpm_web.entity.transaction.Transfer</class>
-        <class>live.cnpm_web.entity.transaction.Savings</class>
+        <class>live.cnpm_web.entity.transaction.savings.Savings</class>
         <class>live.cnpm_web.entity.transaction.loan.Loan</class>
         <class>live.cnpm_web.entity.transaction.loan.LoanRequest</class>
         <class>live.cnpm_web.entity.verification.Verification</class>
@@ -21,6 +21,7 @@
         <class>live.cnpm_web.entity.message.MessageDetail</class>
         <class>live.cnpm_web.entity.account.ServiceAccount</class>
         <class>live.cnpm_web.entity.account.ServiceProvider</class>
+        <class>live.cnpm_web.entity.transaction.savings.SavingsInterest</class>
 
         <properties>
             <property name="hibernate.hbm2ddl.auto" value="update"/>

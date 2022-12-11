@@ -1,9 +1,7 @@
 package live.cnpm_web.entity.account.account;
 
 import javax.persistence.Entity;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "Manager")

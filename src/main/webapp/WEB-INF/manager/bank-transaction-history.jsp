@@ -4,7 +4,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <title>Lịch Sử Giao Dịch</title>
+  <title>Lịch Sử Hoạt Động</title>
 
   <%@include file="/WEB-INF/dependencies/meta.html" %>
   <%@include file="/WEB-INF/dependencies/script.jsp" %>
@@ -17,10 +17,22 @@
 </head>
 <body class="bg-light">
 
-<%@include file="../dependencies/nav.jsp" %>
+<%@include file="dependencies/nav.jsp" %>
 
 <section id="transaction-history">
   <div class="mx-5 my-4">
+
+    <c:choose>
+    <c:when test="${empty transactionList}">
+      <div class="container-fluid">
+        <div class="row flex-nowrap overflow-auto">
+          <p>Bạn không có giao dịch nào</p>
+        </div>
+      </div>
+    </c:when>
+
+    <c:otherwise>
+
     <table class="table" id="transaction-history-table">
       <thead>
       <tr>
@@ -33,11 +45,12 @@
               <option value="0">Tất cả</option>
               <option value="1">Chuyển tiền</option>
               <option value="2">Gửi tiết kiệm</option>
-<%--              <option value="3">Vay</option>--%>
+                <%--              <option value="3">Vay</option>--%>
             </select>
           </th>
           <th scope="col">
             <select name="period" id="period" class="form-control">
+              <option value="-1">Tất cả</option>
               <option value="0">1 ngày</option>
               <option value="1">3 ngày</option>
               <option value="2">7 ngày</option>
@@ -45,6 +58,11 @@
           </th>
           <th scope="col">
             <select name="time" id="time" class="form-control" disabled>
+              <option value="1">Tất cả</option>
+            </select>
+          </th>
+          <th scope="col">
+            <select name="src" id="src" class="form-control" disabled>
               <option value="1">Tất cả</option>
             </select>
           </th>
@@ -74,60 +92,51 @@
         <th scope="col">Loại giao dịch</th>
         <th scope="col">Ngày giao dịch</th>
         <th scope="col">Thời gian</th>
+        <th scope="col">Tài khoản nguồn</th>
         <th scope="col">Tài khoản đích</th>
         <th scope="col">Số tiền</th>
         <th scope="col">Thông tin chi tiết</th>
       </tr>
       </thead>
       <tbody>
-
-      <c:choose>
-        <c:when test="${empty transactionList}">
-          <div class="container-fluid">
-            <div class="row flex-nowrap overflow-auto">
-              <p>Bạn không có giao dịch nào</p>
-            </div>
-          </div>
-        </c:when>
-
-        <c:otherwise>
-          <c:forEach items="${transactionList}" var="transaction" varStatus="loop">
-            <tr>
-              <th scope="row">${loop.index}</th>
-              <td>
-                <c:catch var="exception">
-                  <c:set var="temp" value="${transaction.rolledOver}"/>
-                </c:catch>
-                <c:choose>
-                  <c:when test="${transaction.name == 'transfer'}">Chuyển tiền</c:when>
-                  <c:when test="${not empty exception}">Vay</c:when>
-                  <c:otherwise>Tiết kiệm</c:otherwise>
-                </c:choose>
-              </td>
-              <td>
-                <fmt:parseDate value="${transaction.createdTime}" pattern="y-M-dd'T'H:m"
-                               var="parseCreatedTime"></fmt:parseDate>
-                <fmt:formatDate value="${parseCreatedTime}" pattern="yyyy-MM-dd"/>
-              </td>
-              <td>
-                <fmt:parseDate value="${transaction.createdTime}" pattern="y-M-dd'T'H:m:s"
-                               var="parseCreatedTime"></fmt:parseDate>
-                <fmt:formatDate value="${parseCreatedTime}" pattern="HH:mm:ss"/>
-              </td>
-              <td>${transaction.transactionAccountDestination.accountNumber}</td>
-              <td><fmt:formatNumber value="${transaction.amount}" maxFractionDigits="0"/></td>
-              <td>
-                <c:catch var="exception">
-                  <c:set var="temp" value="${transaction.content}"/>
-                </c:catch>
-                <c:choose>
-                  <c:when test="${empty exception}">${transaction.content}</c:when>
-                  <c:otherwise>${transaction.name}</c:otherwise>
-                </c:choose>
-              </td>
-            </tr>
-          </c:forEach>
-        </c:otherwise>
+      <c:forEach items="${transactionList}" var="transaction" varStatus="loop">
+        <tr>
+          <th scope="row">${loop.index}</th>
+          <td>
+            <c:catch var="exception">
+              <c:set var="temp" value="${transaction.rolledOver}"/>
+            </c:catch>
+            <c:choose>
+              <c:when test="${transaction.name == 'transfer'}">Chuyển tiền</c:when>
+              <c:when test="${not empty exception}">Vay</c:when>
+              <c:otherwise>Tiết kiệm</c:otherwise>
+            </c:choose>
+          </td>
+          <td>
+            <fmt:parseDate value="${transaction.createdTime}" pattern="y-M-dd'T'H:m"
+                           var="parseCreatedTime"></fmt:parseDate>
+            <fmt:formatDate value="${parseCreatedTime}" pattern="yyyy-MM-dd"/>
+          </td>
+          <td>
+            <fmt:parseDate value="${transaction.createdTime}" pattern="y-M-dd'T'H:m:s"
+                           var="parseCreatedTime"></fmt:parseDate>
+            <fmt:formatDate value="${parseCreatedTime}" pattern="HH:mm:ss"/>
+          </td>
+          <td>${transaction.transactionAccountSource.accountNumber}</td>
+          <td>${transaction.transactionAccountDestination.accountNumber}</td>
+          <td><fmt:formatNumber value="${transaction.amount}" maxFractionDigits="0"/></td>
+          <td>
+            <c:catch var="exception">
+              <c:set var="temp" value="${transaction.content}"/>
+            </c:catch>
+            <c:choose>
+              <c:when test="${empty exception}">${transaction.content}</c:when>
+              <c:otherwise>${transaction.name}</c:otherwise>
+            </c:choose>
+          </td>
+        </tr>
+      </c:forEach>
+      </c:otherwise>
       </c:choose>
       </tbody>
     </table>
