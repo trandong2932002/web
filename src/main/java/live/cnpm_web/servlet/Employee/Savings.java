@@ -23,12 +23,12 @@ public class Savings extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        if(session.getAttribute("username-emp") == null){
+        if (session.getAttribute("username-emp") == null) {
             resp.sendRedirect("/page-employee");
-        }
-        else {
+        } else {
             String url = "/WEB-INF/employee/deposit/deposit.jsp";
             List<live.cnpm_web.entity.transaction.savings.Savings> list_savings = TransactionDB.selectAll(live.cnpm_web.entity.transaction.savings.Savings.class);
+
             req.setAttribute("list_savings", list_savings);
             System.out.println(list_savings);
             getServletContext().getRequestDispatcher(url)
@@ -39,7 +39,7 @@ public class Savings extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
-        if(action.equals("cancel")){
+        if (action.equals("cancel")) {
             resp.sendRedirect("/page-employee");
         } else if (action.equals("create-report")) {
             String url = "/WEB-INF/employee/deposit/deposit-identify.jsp";
@@ -49,11 +49,9 @@ public class Savings extends HttpServlet {
             String url = "/WEB-INF/employee/deposit/deposit-info-customer.jsp";
             String identify = req.getParameter("identify");
             Customer customer = AccountDB.selectBySSN(identify);
-            if(customer == null)
-            {
+            if (customer == null) {
                 resp.sendRedirect("/savings-emp");
-            }
-            else {
+            } else {
                 TransactionAccount transactionAccount = customer.getTransactionAccount();
                 DecimalFormat df = new DecimalFormat("####.##");
                 Double tmp = Double.valueOf(transactionAccount.getBalance());
@@ -63,8 +61,7 @@ public class Savings extends HttpServlet {
                 getServletContext().getRequestDispatcher(url)
                         .forward(req, resp);
             }
-        }
-        else if (action.equals("deposit-info-customer")) {
+        } else if (action.equals("deposit-info-customer")) {
             String url = "/WEB-INF/employee/deposit/deposit-create-request.jsp";
             String balance = req.getParameter("balance");
             String account = req.getParameter("account");
@@ -88,8 +85,7 @@ public class Savings extends HttpServlet {
 
             System.out.println(term);
 
-            if(interest.equals("5%"))
-            {
+            if (interest.equals("5%")) {
                 interest = "0.05";
             } else if (interest.equals("6%")) {
                 interest = "0.06";
@@ -107,7 +103,7 @@ public class Savings extends HttpServlet {
             savings.setStatus(live.cnpm_web.entity.transaction.savings.Savings.SavingsStatus.INPROGRESS);
             savings.setTransactionAccountSource(transactionAccount_src);
             savings.setCreatedDate(LocalDate.parse(create_date));
-            savings.setEndTime(LocalDateTime.parse(maturity_date +"T00:00:00"));// end day
+            savings.setEndTime(LocalDateTime.parse(maturity_date + "T00:00:00"));// end day
             savings.setInterest(Double.valueOf(interest));
             savings.setPenaltyInterest(Double.valueOf("0.08"));
             savings.setRolledOver(live.cnpm_web.entity.transaction.savings.Savings.RolledOver.NO);
@@ -124,20 +120,19 @@ public class Savings extends HttpServlet {
             resp.sendRedirect("/savings-emp");
         } else if (action.equals("withdraw-deposit")) {
             String url = "/WEB-INF/employee/deposit/withdraw-deposit/wd-identify.jsp";
-            getServletContext().getRequestDispatcher(url).forward(req,resp);
+            getServletContext().getRequestDispatcher(url).forward(req, resp);
         } else if (action.equals("wd-identify")) {
             String identify = req.getParameter("identify");
             Customer customer = AccountDB.selectBySSN(identify);
-            if(customer == null){
+            if (customer == null) {
                 resp.sendRedirect("/savings-emp");
-            }
-            else {
+            } else {
                 List<live.cnpm_web.entity.transaction.savings.Savings> list_savings = TransactionDB.selectAllByTransactionAccount(customer.getTransactionAccount(), live.cnpm_web.entity.transaction.savings.Savings.class);
                 req.setAttribute("list_savings", list_savings);
                 req.setAttribute("account", customer);
                 System.out.println(list_savings.toString());
                 String url = "/WEB-INF/employee/deposit/withdraw-deposit/wd-detail-customer.jsp";
-                getServletContext().getRequestDispatcher(url).forward(req,resp);
+                getServletContext().getRequestDispatcher(url).forward(req, resp);
             }
         } else if (action.equals("withdraw-savings")) {
             String savings_id = req.getParameter("savings-id");
@@ -148,11 +143,11 @@ public class Savings extends HttpServlet {
             TransactionAccount transactionAccount = customer.getTransactionAccount();
 
             LocalDateTime now = LocalDateTime.now();
-            if(savings.getEndTime().isAfter(now)){
+            if (savings.getEndTime().isAfter(now)) {
                 savings.setInterest(savings.getInterest() - savings.getPenaltyInterest());
 
                 //Cập nhật tài khoản
-                transactionAccount.setBalance(transactionAccount.getBalance() + savings.getAmount()*(1+savings.getInterest()));
+                transactionAccount.setBalance(transactionAccount.getBalance() + savings.getAmount() * (1 + savings.getInterest()));
                 TransactionDB.update(transactionAccount);
 
                 //Tạo 1 transfer
@@ -161,16 +156,15 @@ public class Savings extends HttpServlet {
                 transfer.setName("Withdraw Savings");
                 transfer.setTransactionAccountDestination(transactionAccount);
                 transfer.setStatus(Transfer.TransferStatus.SUCCESS);
-                transfer.setAmount(savings.getAmount()*savings.getInterest());
+                transfer.setAmount(savings.getAmount() * savings.getInterest());
                 transfer.setContent("Rut So Tiet Kiem");
                 TransactionDB.insert(transfer);
 
                 //Xóa sổ tiết kiệm
                 TransactionDB.delete(savings);
-            }
-            else {
+            } else {
                 //Cập nhật tài khoản
-                transactionAccount.setBalance(transactionAccount.getBalance() + savings.getAmount()*savings.getInterest());
+                transactionAccount.setBalance(transactionAccount.getBalance() + savings.getAmount() * savings.getInterest());
                 TransactionDB.update(transactionAccount);
 
                 //Tạo 1 transfer
@@ -179,7 +173,7 @@ public class Savings extends HttpServlet {
                 transfer.setName("Withdraw Savings");
                 transfer.setTransactionAccountDestination(transactionAccount);
                 transfer.setStatus(Transfer.TransferStatus.SUCCESS);
-                transfer.setAmount(savings.getAmount()*savings.getInterest());
+                transfer.setAmount(savings.getAmount() * savings.getInterest());
                 transfer.setContent("Rut So Tiet Kiem");
                 TransactionDB.insert(transfer);
 

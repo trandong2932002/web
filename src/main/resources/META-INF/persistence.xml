@@ -29,16 +29,16 @@
             <property name="hibernate.show_sql" value="true"/>
 
 
-            <!--            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>-->
-<!--            <property name="javax.persistence.jdbc.url"-->
-<!--                      value="jdbc:postgresql://lin-11920-3301-pgsql-primary.servers.linodedb.net:5432/postgres"/>-->
-<!--            <property name="javax.persistence.jdbc.user" value="linpostgres"/>-->
-<!--            <property name="javax.persistence.jdbc.password" value="UeNU!1S2D20oIIVr"/>-->
-
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
             <property name="javax.persistence.jdbc.url"
-                      value="jdbc:postgresql://localhost:5432/postgres"/>
-            <property name="javax.persistence.jdbc.user" value="trand"/>
+                      value="jdbc:postgresql://lin-11920-3301-pgsql-primary.servers.linodedb.net:5432/postgres"/>
+            <property name="javax.persistence.jdbc.user" value="linpostgres"/>
+            <property name="javax.persistence.jdbc.password" value="UeNU!1S2D20oIIVr"/>
+
+<!--            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>-->
+<!--            <property name="javax.persistence.jdbc.url"-->
+<!--                      value="jdbc:postgresql://localhost:5432/postgres"/>-->
+<!--            <property name="javax.persistence.jdbc.user" value="trand"/>-->
         </properties>
     </persistence-unit>
 </persistence>

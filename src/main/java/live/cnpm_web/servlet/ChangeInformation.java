@@ -30,6 +30,7 @@ public class ChangeInformation extends HttpServlet {
         }
         // end check
 
+        request.setAttribute("customer", activity.getAccount());
         getServletContext().getRequestDispatcher(url).forward(request, response);
     }
 

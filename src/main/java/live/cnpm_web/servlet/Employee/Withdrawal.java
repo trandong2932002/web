@@ -43,11 +43,11 @@ public class Withdrawal extends HttpServlet {
             String identify = req.getParameter("identify");
 
             Customer customer = AccountDB.selectBySSN(identify);
-            TransactionAccount transactionAccount = customer.getTransactionAccount();
             if (customer == null){
                 resp.sendRedirect("/withdrawal");
             }
             else {
+                TransactionAccount transactionAccount = customer.getTransactionAccount();
                 DecimalFormat df = new DecimalFormat("#,###.##");
                 req.setAttribute("account", customer);
                 req.setAttribute("balance",df.format((Double) transactionAccount.getBalance()) );
@@ -59,6 +59,7 @@ public class Withdrawal extends HttpServlet {
 
             String account = req.getParameter("account");
             String balance = req.getParameter("balance");
+
             req.setAttribute("account", account);
             req.setAttribute("balance", balance);
 
@@ -66,8 +67,10 @@ public class Withdrawal extends HttpServlet {
                     .forward(req, resp);
         } else if (action.equals("withdrawal")) {
             DecimalFormat df = new DecimalFormat("#,###.##");
+
             String account = req.getParameter("account");
             String value = req.getParameter("select_money");
+
             Double amount = Double.valueOf(0);
             if(value.equals("7")){
                 amount = Double.valueOf(req.getParameter("differ-money"));
@@ -84,8 +87,10 @@ public class Withdrawal extends HttpServlet {
             }else if (value.equals("6")) {
                 amount = Double.valueOf(5000000);
             }
+
             Customer customer = AccountDB.selectByPhoneNumber(account);
             TransactionAccount transactionAccount = customer.getTransactionAccount();
+
             Double result = Double.valueOf(transactionAccount.getBalance()) - amount;
             transactionAccount.setBalance(result);
 

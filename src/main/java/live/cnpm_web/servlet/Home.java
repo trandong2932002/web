@@ -2,6 +2,7 @@ package live.cnpm_web.servlet;
 
 import live.cnpm_web.entity.account.Activity;
 import live.cnpm_web.util.ActivityUtil;
+import live.cnpm_web.util.CheckSavingsEachDay;
 import live.cnpm_web.util.SavingsInterestUtil;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
@@ -10,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Timer;
 
 
 public class Home extends HttpServlet {
@@ -18,22 +21,22 @@ public class Home extends HttpServlet {
     public void init() throws ServletException {
         super.init();
         // run savings check each day
-//        Timer timer = new Timer();
-//        Calendar date = Calendar.getInstance();
-//        date.set(
-//                Calendar.DAY_OF_WEEK,
-//                Calendar.SUNDAY
-//        );
-//        date.set(Calendar.HOUR, 0);
-//        date.set(Calendar.MINUTE, 0);
-//        date.set(Calendar.SECOND, 0);
-//        date.set(Calendar.MILLISECOND, 0);
-//
-//        timer.schedule(
-//                new CheckSavingsEachDay(),
-//                date.getTime(),
-//                1000 * 60 * 60 * 24
-//        );
+        Timer timer = new Timer();
+        Calendar date = Calendar.getInstance();
+        date.set(
+                Calendar.DAY_OF_WEEK,
+                Calendar.SUNDAY
+        );
+        date.set(Calendar.HOUR, 0);
+        date.set(Calendar.MINUTE, 0);
+        date.set(Calendar.SECOND, 0);
+        date.set(Calendar.MILLISECOND, 0);
+
+        timer.schedule(
+                new CheckSavingsEachDay(),
+                date.getTime(),
+                1000 * 60 * 60 * 24
+        );
 
         // load default savings interests
         SavingsInterestUtil.loadSavingsInterestList();
